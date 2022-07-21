@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="MeshEditor">
+    <file>cube_ico.png</file>
+  </qresource>
+</RCC>
