@@ -1,0 +1,1 @@
+#include "PolygonalModelDetails.h"

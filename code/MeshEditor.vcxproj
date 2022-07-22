@@ -11,8 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\Model\PolygonalModel\Details\Edge.cpp" />
+    <ClCompile Include="FileManagement\FileManager.cpp" />
+    <ClCompile Include="Objects\LightSource\LightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow\MainWindow.cpp" />
+    <ClCompile Include="Math\Matrix.cpp" />
+    <ClCompile Include="Objects\Camera\Camera.cpp" />
+    <ClCompile Include="Objects\Model\Model.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModel\Details\Face.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModel\Details\Vertex.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModel\PolygonalModel.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModel\Details\PolygonalModelDetails.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow\MainWindow.h" />
@@ -22,6 +33,21 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWindow\MainWindow.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Objects\Model\PolygonalModel\Details\Face.h" />
+    <ClInclude Include="FileManagement\FileManager.h" />
+    <ClInclude Include="Objects\LightSource\LightSource.h" />
+    <ClInclude Include="Math\Matrix.h" />
+    <ClInclude Include="Exceptions\Exceptions.h" />
+    <ClInclude Include="Objects\Camera\Camera.h" />
+    <ClInclude Include="Objects\Model\Model.h" />
+    <ClInclude Include="Objects\Model\PolygonalModel\Details\Edge.h" />
+    <ClInclude Include="Objects\Model\PolygonalModel\Details\Vertex.h" />
+    <ClInclude Include="Objects\Model\PolygonalModel\PolygonalModel.h" />
+    <ClInclude Include="Objects\Object.h" />
+    <ClInclude Include="Objects\Model\PolygonalModel\Details\PolygonalModelDetails.h" />
+    <ClInclude Include="Scene\Scene.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{42A81CB3-05AE-440F-A197-7DD8F895040E}</ProjectGuid>
@@ -44,7 +70,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>6.2.3_mingw_64</QtInstall>
+    <QtInstall>6.2.3_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets;charts</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -68,7 +94,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>C:\BMSTU\5 semester\CG_course\my\CG_course_project\code;$(IncludePath)</IncludePath>
+    <IncludePath>C:\BMSTU\5 semester\CG_course\my\CG_course_project\code;D:\BMSTU\5_semester\CG_course\my\code;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
