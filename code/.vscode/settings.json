@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "*.svg": "drawio",
+        "string": "cpp",
+        "array": "cpp",
+        "complex": "cpp",
+        "deque": "cpp",
+        "iosfwd": "cpp",
+        "iterator": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "charconv": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp"
+    }
+}

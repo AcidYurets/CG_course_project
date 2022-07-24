@@ -1,9 +1,10 @@
 #pragma once
-#include <Math/Matrix.h>
-using namespace std;
+#include <Eigen/Dense>
+using namespace Eigen;
 
 class Object
 {
-	virtual void transform(const Matrix<double> matrix) = 0;
+	virtual void transform(const Matrix4d matrix) = 0;
 };
+
 

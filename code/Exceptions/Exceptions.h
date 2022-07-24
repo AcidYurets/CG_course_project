@@ -1,19 +1,20 @@
-#ifndef MATRIX_BASE_EXCEPTION_H
-#define MATRIX_BASE_EXCEPTION_H
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <ctime>
 
+#define EXCEPCION_ARGS __FILE__, typeid(*this).name(), __LINE__, time(nullptr)
+
 // For ctime() func unsafe warnings (Visual Studio)
 #pragma warning(disable : 4996)
 
-class MatrixBaseException : public std::exception
+class BaseException : public std::exception
 {
 public:
-	MatrixBaseException(std::string file, std::string classname, int line, time_t time, std::string msg)
+	BaseException(std::string file, std::string classname, int line, time_t time, std::string msg)
 	{
-		error_msg = "File name: " + file + " in line " + std::to_string(line)
+		error_msg = "File name: " + file + "\nException in class " + classname + " in line " + std::to_string(line)
 			+ "\nTime: " + ctime(&time) + "Info: " + msg + "\n";
 	}
 
@@ -23,78 +24,12 @@ protected:
 	std::string error_msg;
 };
 
-class IteratorBaseException : public std::exception
+
+class EmptyException : public BaseException
 {
 public:
-	IteratorBaseException(std::string file, std::string classname, int line, time_t time, std::string msg)
-	{
-		error_msg = "File name: " + file + " in line " + std::to_string(line)
-			+ "\nTime: " + ctime(&time) + "Info: " + msg + "\n";
-	}
-
-	virtual const char* what(void) const noexcept override { return (this->error_msg).c_str(); }
-
-protected:
-	std::string error_msg;
-};
-
-class IndexException : public MatrixBaseException
-{
-public:
-	IndexException(std::string file, std::string classname, int line, time_t time, std::string msg)
-		: MatrixBaseException(file, classname, line, time, msg) { } ;
+	EmptyException(std::string file, std::string classname, int line, time_t time, std::string msg)
+		: BaseException(file, classname, line, time, msg) { } ;
 	const char* what(void) const noexcept { return this->error_msg.c_str(); }
 };
-
-class IsNotEqualException : public MatrixBaseException
-{
-public:
-	IsNotEqualException(std::string file, std::string classname, int line, time_t time, std::string msg)
-		: MatrixBaseException(file, classname, line, time, msg) { }
-	const char* what(void) const noexcept { return this->error_msg.c_str(); }
-};
-
-class IsEmptyException : public MatrixBaseException
-{
-public:
-	IsEmptyException(std::string file, std::string classname, int line, time_t time, std::string msg)
-		: MatrixBaseException(file, classname, line, time, msg) { }
-	const char* what(void) const noexcept { return this->error_msg.c_str(); }
-};
-
-class MultMatrixException : public MatrixBaseException
-{
-public:
-	MultMatrixException(std::string file, std::string classname, int line, time_t time, std::string msg)
-		: MatrixBaseException(file, classname, line, time, msg) { }
-	const char* what(void) const noexcept { return this->error_msg.c_str(); }
-};
-
-class SizeException : public MatrixBaseException
-{
-public:
-	SizeException(std::string file, std::string classname, int line, time_t time, std::string msg)
-		: MatrixBaseException(file, classname, line, time, msg) { }
-	const char* what(void) const noexcept { return this->error_msg.c_str(); }
-};
-
-
-
-class IndexIterException : public IteratorBaseException
-{
-public:
-	IndexIterException(std::string file, std::string classname, int line, time_t time, std::string msg)
-		: IteratorBaseException(file, classname, line, time, msg) { };
-	const char* what(void) const noexcept { return this->error_msg.c_str(); }
-};
-
-class IsEmptyIterException : public IteratorBaseException
-{
-public:
-	IsEmptyIterException(std::string file, std::string classname, int line, time_t time, std::string msg)
-		: IteratorBaseException(file, classname, line, time, msg) { }
-	const char* what(void) const noexcept { return this->error_msg.c_str(); }
-};
-
-#endif // !MATRIX_BASE_EXCEPTION_H
 

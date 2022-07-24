@@ -3,6 +3,6 @@
 
 class LightSource : public Object
 {
-	virtual void transform(const Matrix<double> matrix);
+	virtual void transform(const Matrix4d matrix);
 };
 

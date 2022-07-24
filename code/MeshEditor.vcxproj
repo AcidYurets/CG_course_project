@@ -16,7 +16,6 @@
     <ClCompile Include="Objects\LightSource\LightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow\MainWindow.cpp" />
-    <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Objects\Camera\Camera.cpp" />
     <ClCompile Include="Objects\Model\Model.cpp" />
     <ClCompile Include="Objects\Model\PolygonalModel\Details\Face.cpp" />
@@ -38,7 +37,6 @@
     <ClInclude Include="Objects\Model\PolygonalModel\Details\Face.h" />
     <ClInclude Include="FileManagement\FileManager.h" />
     <ClInclude Include="Objects\LightSource\LightSource.h" />
-    <ClInclude Include="Math\Matrix.h" />
     <ClInclude Include="Exceptions\Exceptions.h" />
     <ClInclude Include="Objects\Camera\Camera.h" />
     <ClInclude Include="Objects\Model\Model.h" />
