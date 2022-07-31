@@ -5,10 +5,7 @@ Face::Face() : edges(0), vertices(0), center(0, 0, 0) { }
 
 Face::Face(Edges edges, Vertices vertices) : edges(edges), vertices(vertices)
 {
-	if (vertices.size() == 0)
-	{
-		throw EmptyException(EXCEPCION_ARGS, "Vertices is empty");
-	}
+	if (vertices.size() == 0) throw EmptyException(EXCEPCION_ARGS, "Vertices is empty");
 	
 	center = findArithmeticCenter();
 }

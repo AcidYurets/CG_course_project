@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
+#include "Scene/Scene.h"
+using namespace std;
 
 class FileManager
 {
 public:
-	Scene loadScene(std::string src);
-	void saveScene(std::string dst, Scene scene);
-
+	shared_ptr<Scene> loadScene(std::string srcFilename);
+	void saveScene(std::string dstFilename, shared_ptr<Scene> scene);
 };
-

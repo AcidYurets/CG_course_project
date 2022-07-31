@@ -24,9 +24,6 @@
     <ClCompile Include="FileManagement\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Model\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,6 +48,12 @@
     <ClCompile Include="Objects\Model\PolygonalModel\Details\Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManagement\SceneLoader\SceneLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow\MainWindow.h">
@@ -67,9 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileManagement\FileManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Object.h">
@@ -100,6 +100,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Model\PolygonalModel\Details\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManagement\SceneLoader\SceneLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
