@@ -16,9 +16,9 @@ public:
 
 	Vector2d getScreenPosition();
 
-	void move(const Vector3d dif);
-	void scale(const Vector3d k);
-	void rotate(const Vector3d angles);
+	void move(const Vector3d move_params);
+	void scale(const Vector3d scale_params);
+	void rotate(const Vector3d rotate_params);
 	
 private:
 	void rotateX(const double angle);

@@ -14,6 +14,10 @@ class PolygonalModelDetails
 public:
 	PolygonalModelDetails();
 
+	Vertices getVertices();
+	Edges getEdges();
+	Faces getFaces();
+
 	void addVertex(std::shared_ptr<Vertex> vert);
 	void addEdge(std::shared_ptr<Edge> edge);
 	void addFace(std::shared_ptr<Face> face);
@@ -31,7 +35,5 @@ private:
 	Edges edges;
 	Faces faces;
 	Vector3d center;
-
-	string name;
 };
 

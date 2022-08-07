@@ -11,18 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FileManagement\SceneLoader\SceneLoader.cpp" />
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\Edge.cpp" />
+    <ClCompile Include="FileManagement\Loader\Loader.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\Edge.cpp" />
     <ClCompile Include="FileManagement\FileManager.cpp" />
     <ClCompile Include="Objects\LightSource\LightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow\MainWindow.cpp" />
     <ClCompile Include="Objects\Camera\Camera.cpp" />
     <ClCompile Include="Objects\Model\Model.cpp" />
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\Face.cpp" />
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\Vertex.cpp" />
-    <ClCompile Include="Objects\Model\PolygonalModel\PolygonalModel.cpp" />
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\PolygonalModelDetails.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\Face.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\Vertex.cpp" />
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -35,18 +34,17 @@
     <QtUic Include="MainWindow\MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileManagement\SceneLoader\SceneLoader.h" />
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\Face.h" />
+    <ClInclude Include="FileManagement\Loader\Loader.h" />
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\Face.h" />
     <ClInclude Include="FileManagement\FileManager.h" />
     <ClInclude Include="Objects\LightSource\LightSource.h" />
     <ClInclude Include="Exceptions\Exceptions.h" />
     <ClInclude Include="Objects\Camera\Camera.h" />
     <ClInclude Include="Objects\Model\Model.h" />
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\Edge.h" />
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\Vertex.h" />
-    <ClInclude Include="Objects\Model\PolygonalModel\PolygonalModel.h" />
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\Edge.h" />
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\Vertex.h" />
     <ClInclude Include="Objects\Object.h" />
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\PolygonalModelDetails.h" />
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.h" />
     <ClInclude Include="Scene\Scene.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

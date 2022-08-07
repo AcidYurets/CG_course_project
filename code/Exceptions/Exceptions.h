@@ -40,3 +40,11 @@ public:
 		: BaseException(file, classname, line, time, msg) { };
 	const char* what(void) const noexcept { return this->error_msg.c_str(); }
 };
+
+class FileFormatException : public BaseException
+{
+public:
+	FileFormatException(std::string file, std::string classname, int line, time_t time, std::string msg)
+		: BaseException(file, classname, line, time, msg) { };
+	const char* what(void) const noexcept { return this->error_msg.c_str(); }
+};

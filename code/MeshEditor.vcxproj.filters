@@ -33,25 +33,22 @@
     <ClCompile Include="Objects\LightSource\LightSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Model\PolygonalModel\PolygonalModel.cpp">
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\PolygonalModelDetails.cpp">
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\Face.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\Face.cpp">
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\Edge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\Edge.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Model\PolygonalModel\Details\Vertex.cpp">
+    <ClCompile Include="Objects\Model\PolygonalModelDetails\Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileManagement\SceneLoader\SceneLoader.cpp">
+    <ClCompile Include="FileManagement\Loader\Loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,25 +84,22 @@
     <ClInclude Include="Objects\LightSource\LightSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Model\PolygonalModel\PolygonalModel.h">
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\PolygonalModelDetails.h">
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\Face.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\Face.h">
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\Edge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\Edge.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Model\PolygonalModel\Details\Vertex.h">
+    <ClInclude Include="Objects\Model\PolygonalModelDetails\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileManagement\SceneLoader\SceneLoader.h">
+    <ClInclude Include="FileManagement\Loader\Loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

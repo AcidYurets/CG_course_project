@@ -4,7 +4,7 @@ using namespace Eigen;
 
 class Object
 {
-	virtual void transform(const Matrix4d matrix) = 0;
+	//virtual void transform(const Matrix4d matrix) = 0;
 };
 
 

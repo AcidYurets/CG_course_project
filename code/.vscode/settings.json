@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.py": "python",
+        "*.cpp": "cpp",
         "*.svg": "drawio",
         "string": "cpp",
         "array": "cpp",
@@ -12,6 +14,8 @@
         "xutility": "cpp",
         "charconv": "cpp",
         "xlocmon": "cpp",
-        "xlocnum": "cpp"
+        "xlocnum": "cpp",
+        "ios": "cpp",
+        "type_traits": "cpp"
     }
 }
