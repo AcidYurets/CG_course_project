@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <Eigen/Dense>
+#include <QDebug>
 using namespace Eigen;
 
 class Vertex
@@ -14,6 +15,7 @@ public:
 	Vector3d getPosition();
 	void setPosition(Vector3d pos);
 
+	Vector3d getTransformPosition();
 	Vector2d getScreenPosition();
 
 	void move(const Vector3d move_params);
@@ -28,3 +30,5 @@ private:
 	Vector3d position;
 	Matrix4d transMatrix;
 };
+
+double getDistance2D(Vector2i v1, Vector2i v2);

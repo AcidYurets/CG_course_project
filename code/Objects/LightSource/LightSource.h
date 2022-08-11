@@ -10,8 +10,6 @@ public:
 	LightSource();
 	LightSource(Vertex v, string name);
 
-	//virtual void transform(const Matrix4d matrix);
-
 private:
 	Vertex pos;
 	string name;

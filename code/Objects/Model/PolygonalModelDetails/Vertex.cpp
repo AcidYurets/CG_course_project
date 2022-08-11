@@ -17,12 +17,22 @@ void Vertex::setPosition(Vector3d pos)
 	position = pos;
 }
 
-Vector2d Vertex::getScreenPosition()
-{
+Vector3d Vertex::getTransformPosition() {
+	Vector3d res;
+	Vector4d beforeTransform;
+	beforeTransform << position, 1;
+
+	Vector4d afterTransformation = beforeTransform.transpose() * transMatrix;
+	res << afterTransformation.x(), afterTransformation.y(), afterTransformation.z();
+	return res;
+}
+
+Vector2d Vertex::getScreenPosition() {
+	Vector3d transformPosition = getTransformPosition();
 	/*
 	* TODO: Тут будет магия!
 	*/
-	Vector2d res = Vector2d(position.x(), position.y());
+	Vector2d res = Vector2d(transformPosition.x(), transformPosition.y());
 	return res;
 }
 
@@ -89,3 +99,8 @@ void Vertex::rotateZ(const double angle)
 }
 
 
+
+double getDistance2D(Vector2i v1, Vector2i v2)
+{
+	return sqrt((v1.x() - v2.x()) * (v1.x() - v2.x()) + (v1.y() - v2.y()) * (v1.y() - v2.y()));
+}

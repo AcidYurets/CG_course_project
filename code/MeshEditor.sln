@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MeshEditor", "MeshEditor.vcxproj", "{42A81CB3-05AE-440F-A197-7DD8F895040E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "proj", "..\..\..\repos\Планировщик города - Ковалец\proj\proj.vcxproj", "{E09ACB0F-2137-3F20-A218-21F707C5B05D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -17,10 +15,6 @@ Global
 		{42A81CB3-05AE-440F-A197-7DD8F895040E}.Debug|x64.Build.0 = Debug|x64
 		{42A81CB3-05AE-440F-A197-7DD8F895040E}.Release|x64.ActiveCfg = Release|x64
 		{42A81CB3-05AE-440F-A197-7DD8F895040E}.Release|x64.Build.0 = Release|x64
-		{E09ACB0F-2137-3F20-A218-21F707C5B05D}.Debug|x64.ActiveCfg = Debug|x64
-		{E09ACB0F-2137-3F20-A218-21F707C5B05D}.Debug|x64.Build.0 = Debug|x64
-		{E09ACB0F-2137-3F20-A218-21F707C5B05D}.Release|x64.ActiveCfg = Release|x64
-		{E09ACB0F-2137-3F20-A218-21F707C5B05D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

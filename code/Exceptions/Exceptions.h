@@ -14,7 +14,7 @@ class BaseException : public std::exception
 public:
 	BaseException(std::string file, std::string classname, int line, time_t time, std::string msg)
 	{
-		error_msg = "File name: " + file + "\nException in class " + classname + " in line " + std::to_string(line)
+		error_msg = "File name: " + file + "\nException in " + classname + " in line " + std::to_string(line)
 			+ "\nTime: " + ctime(&time) + "Info: " + msg + "\n";
 	}
 

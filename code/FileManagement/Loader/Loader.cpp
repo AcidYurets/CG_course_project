@@ -28,6 +28,8 @@ Models Loader::loadModels() {
 	string name = "Nameless";
 	Edges modelEdges(0);
 
+	size_t verticesReaded = 0;
+
 	string line;
 	while (getline(*srcFile, line)) {
 		string key = "";
@@ -37,8 +39,12 @@ Models Loader::loadModels() {
 		if (key == "o") {
 			// Если это не первая модель в файле
 			if (details) {
+				details->setEdges(modelEdges);
+				details->setArithmeticCenter();
 				shared_ptr<Model> m = make_shared<Model>(details, name);
 				models.push_back(m);
+
+				verticesReaded += details->getVertices().size();
 			}
 
 			if (!(lineStream >> name)) throw FileFormatException(EXCEPCION_ARGS, "Invalid file format: can't read model name");
@@ -55,7 +61,7 @@ Models Loader::loadModels() {
 			Vertices vertices(0);
 			Edges faceEdges(0);
 
-			for (int num : vNumbers) vertices.push_back(details->getVertices()[num]);
+			for (int num : vNumbers) vertices.push_back(details->getVertices()[num - verticesReaded]);
 			for (int i = 0; i < vertices.size(); i++) {
 				shared_ptr<Edge> e = make_shared<Edge>(vertices[i], vertices[(i + 1) % vertices.size()]);
 				e = addEdgeToModel(modelEdges, e);
@@ -69,6 +75,8 @@ Models Loader::loadModels() {
 	
 	// Сохраним последнюю считанную модель
 	if (details) {
+		details->setEdges(modelEdges);
+		details->setArithmeticCenter();
 		shared_ptr<Model> m = make_shared<Model>(details, name);
 		models.push_back(m);
 	}
@@ -90,6 +98,8 @@ shared_ptr<Scene> Loader::loadScene()
 	shared_ptr<LightSource> ls(nullptr);
 	string lsName = "Nameless light source";
 
+	size_t verticesReaded = 0;
+
 	string line;
 	while (getline(*srcFile, line)) {
 		string key = "";
@@ -99,8 +109,12 @@ shared_ptr<Scene> Loader::loadScene()
 		if (key == "o") { // Считываем модель
 			// Если это не первая модель в файле
 			if (details) {
+				details->setEdges(modelEdges);
+				details->setArithmeticCenter();
 				shared_ptr<Model> m = make_shared<Model>(details, modelName);
 				models.push_back(m);
+
+				verticesReaded += details->getVertices().size();
 			}
 
 			if (!(lineStream >> modelName)) throw FileFormatException(EXCEPCION_ARGS, "Invalid file format: can't read model name");
@@ -117,14 +131,14 @@ shared_ptr<Scene> Loader::loadScene()
 			Vertices vertices(0);
 			Edges faceEdges(0);
 
-			for (int num : vNumbers) vertices.push_back(details->getVertices()[num]);
+			for (int num : vNumbers) vertices.push_back(details->getVertices()[num - verticesReaded]);
 			for (int i = 0; i < vertices.size(); i++) {
 				shared_ptr<Edge> e = make_shared<Edge>(vertices[i], vertices[(i + 1) % vertices.size()]);
 				e = addEdgeToModel(modelEdges, e);
 				faceEdges.push_back(e);
 			}
 
-			shared_ptr<Face> f = make_shared<Face>(Edges(), vertices);
+			shared_ptr<Face> f = make_shared<Face>(faceEdges, vertices);
 			details->addFace(f);
 		}
 		else if (key == "ls") { // Считываем источние света
@@ -145,6 +159,8 @@ shared_ptr<Scene> Loader::loadScene()
 
 	// Сохраним последнюю считанную модель
 	if (details) {
+		details->setEdges(modelEdges);
+		details->setArithmeticCenter();
 		shared_ptr<Model> m = make_shared<Model>(details, modelName);
 		models.push_back(m);
 	}
@@ -175,17 +191,27 @@ vector<int> Loader::readFaceDetails(istringstream &lineStream) {
 }
 
 shared_ptr<Edge> Loader::addEdgeToModel(Edges &modelEdges, const shared_ptr<Edge> &newEdge) {
+	bool found = false;
 	shared_ptr<Edge> foundEdge(newEdge);
-	for (auto e : modelEdges) {
-		// Сравниваем вершины ребра в прямом и обратном поядке. 
-		// TODO: Убедиться, что сравнение работает.
-		if (e->getVertices().x() == newEdge->getVertices().x() && e->getVertices().y() == newEdge->getVertices().y() || 
-			e->getVertices().x() == newEdge->getVertices().y() && e->getVertices().y() == newEdge->getVertices().x()) {
-			// Если ребро уже есть в списке:
-			modelEdges.push_back(e);
-			foundEdge = e;
-			break;
+	if (modelEdges.size() == 0)
+		modelEdges.push_back(newEdge);
+	else {
+		for (auto& e : modelEdges) {
+			// Сравниваем вершины ребра в прямом и обратном поядке. 
+			// TODO: Убедиться, что сравнение работает.
+			if (e->getVertices().x() == newEdge->getVertices().x() && e->getVertices().y() == newEdge->getVertices().y() || 
+				e->getVertices().x() == newEdge->getVertices().y() && e->getVertices().y() == newEdge->getVertices().x()) {
+				// Если ребро уже есть в списке:
+				found = true;
+				foundEdge = e;
+				break;
+			}
+		}
+		if (!found) {
+			modelEdges.push_back(newEdge);
 		}
 	}
+		
+
 	return foundEdge;
 }

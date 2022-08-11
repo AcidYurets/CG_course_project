@@ -4,7 +4,9 @@
 shared_ptr<Scene> FileManager::loadScene(std::string srcFilename) {
 	Loader loader(srcFilename);
 
-	shared_ptr<Scene> scene = make_shared<Scene>();
+	shared_ptr<Scene> scene = loader.loadScene();
+
+	loader.closeFile();
 	return scene;
 }
 

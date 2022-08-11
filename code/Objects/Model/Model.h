@@ -8,11 +8,13 @@ public:
 	Model();
 	Model(shared_ptr<PolygonalModelDetails> details, string name);
 
-	virtual void transform(const Matrix4d matrix);
+	string getName();
+	shared_ptr<PolygonalModelDetails> getDetails();
+
+	virtual void transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);
 
 private:
 	shared_ptr<PolygonalModelDetails> details;
-
 	string name;
 };
 

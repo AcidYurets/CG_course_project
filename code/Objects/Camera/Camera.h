@@ -10,8 +10,6 @@ public:
 	Camera();
 	Camera(Vertex pos);
 
-	//virtual void transform(const Matrix4d matrix);
-
 private:
 	Vertex pos;
 	// Центр вращения камеры, к которому направлен ее объектив.

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileManagement\Loader\Loader.cpp" />
+    <ClCompile Include="MainWindow\Display.cpp" />
     <ClCompile Include="Objects\Model\PolygonalModelDetails\Edge.cpp" />
     <ClCompile Include="FileManagement\FileManager.cpp" />
     <ClCompile Include="Objects\LightSource\LightSource.cpp" />
@@ -22,7 +23,10 @@
     <ClCompile Include="Objects\Model\PolygonalModelDetails\Face.cpp" />
     <ClCompile Include="Objects\Model\PolygonalModelDetails\Vertex.cpp" />
     <ClCompile Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.cpp" />
+    <ClCompile Include="RenderManagement\RenderManager.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="SelectionManagement\SelectionManager.cpp" />
+    <ClCompile Include="TransformManagement\TransformManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow\MainWindow.h" />
@@ -45,7 +49,10 @@
     <ClInclude Include="Objects\Model\PolygonalModelDetails\Vertex.h" />
     <ClInclude Include="Objects\Object.h" />
     <ClInclude Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.h" />
+    <ClInclude Include="RenderManagement\RenderManager.h" />
     <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="SelectionManagement\SelectionManager.h" />
+    <ClInclude Include="TransformManagement\TransformManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{42A81CB3-05AE-440F-A197-7DD8F895040E}</ProjectGuid>

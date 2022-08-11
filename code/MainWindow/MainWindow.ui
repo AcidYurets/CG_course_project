@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="1">
-     <widget class="Display" name="graphicsView"/>
+     <widget class="Display" name="display"/>
     </item>
     <item row="0" column="2" rowspan="2">
      <widget class="QFrame" name="rightFrame">
@@ -28,7 +28,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QTreeWidget" name="treeWidget">
+        <widget class="QTreeWidget" name="objectsWidget">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -70,14 +70,14 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QTabWidget" name="tabWidget_2">
+        <widget class="QTabWidget" name="settingsWidget">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <widget class="QWidget" name="tabWidget_2Page1">
+         <widget class="QWidget" name="transformationPage">
           <attribute name="title">
            <string>Трансформация</string>
           </attribute>
@@ -90,7 +90,7 @@
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
+            <layout class="QHBoxLayout" name="horizontalLayout_1">
              <item>
               <widget class="QLabel" name="label_4">
                <property name="text">
@@ -99,7 +99,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox">
+              <widget class="QDoubleSpinBox" name="moveXBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -112,7 +112,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_3">
+              <widget class="QPushButton" name="moveXButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -130,7 +130,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+              <widget class="QDoubleSpinBox" name="moveYBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -143,7 +143,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_4">
+              <widget class="QPushButton" name="moveYButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -161,7 +161,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+              <widget class="QDoubleSpinBox" name="moveZBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -174,7 +174,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="moveZButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -199,7 +199,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+              <widget class="QDoubleSpinBox" name="rotateXBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -212,7 +212,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_7">
+              <widget class="QPushButton" name="rotateXButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -230,7 +230,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+              <widget class="QDoubleSpinBox" name="rotateYBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -243,7 +243,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_8">
+              <widget class="QPushButton" name="rotateYButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -261,7 +261,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
+              <widget class="QDoubleSpinBox" name="rotateZBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -274,7 +274,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_9">
+              <widget class="QPushButton" name="rotateZButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -299,7 +299,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
+              <widget class="QDoubleSpinBox" name="scaleXBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -312,7 +312,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_10">
+              <widget class="QPushButton" name="scaleXButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -330,7 +330,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_8">
+              <widget class="QDoubleSpinBox" name="scaleYBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -343,7 +343,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_12">
+              <widget class="QPushButton" name="scaleYButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -361,7 +361,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_9">
+              <widget class="QDoubleSpinBox" name="scaleZBox">
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -374,7 +374,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_13">
+              <widget class="QPushButton" name="scaleZButton">
                <property name="text">
                 <string>Применить</string>
                </property>
@@ -383,7 +383,7 @@
             </layout>
            </item>
            <item>
-            <spacer name="verticalSpacer">
+            <spacer name="transformationSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -403,24 +403,24 @@
      </widget>
     </item>
     <item row="0" column="0" colspan="2">
-     <widget class="QWidget" name="widget" native="true">
+     <widget class="QWidget" name="buttonsWidget" native="true">
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="2">
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="frameButton">
          <property name="text">
           <string>Каркасное представление</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="projectionButton">
          <property name="text">
           <string>Ортогональная проекция</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <spacer name="horizontalSpacer">
+        <spacer name="buttonsSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -446,8 +446,45 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="fileMenu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="open"/>
+    <addaction name="loadModels"/>
+    <addaction name="separator"/>
+    <addaction name="save"/>
+    <addaction name="saveModels"/>
+   </widget>
+   <widget class="QMenu" name="infoMenu">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+   </widget>
+   <addaction name="fileMenu"/>
+   <addaction name="infoMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="open">
+   <property name="text">
+    <string>Открыть...</string>
+   </property>
+  </action>
+  <action name="loadModels">
+   <property name="text">
+    <string>Загрузить модели</string>
+   </property>
+  </action>
+  <action name="save">
+   <property name="text">
+    <string>Сохранить...</string>
+   </property>
+  </action>
+  <action name="saveModels">
+   <property name="text">
+    <string>Сохранить модели</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
