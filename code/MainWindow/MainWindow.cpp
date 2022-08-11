@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this->ui->display, &Display::objectMoveSignal, this, &MainWindow::objectMoveSlot);
     connect(this->ui->display, &Display::objectScaleSignal, this, &MainWindow::objectScaleSlot);
+    connect(this->ui->display, &Display::objectRotateSignal, this, &MainWindow::objectRotateSlot);
 }
 
 MainWindow::~MainWindow() { 
@@ -61,10 +62,26 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
         if (model) {
             showStatusMessage("Now " + model->getName() + " is scaling");
 
-            Vector3d center = model->getDetails()->getCenter();
-            double distance = getDistance2D()
-            Vector3d scale_params(newPos.x() - lastPos.x(), newPos.y() - lastPos.y(), 0); // TODO !!!
+            Vector2d center = model->getDetails()->getCenter().getScreenPosition();
+            double dist1 = getDistance2D(center, lastPos.cast<double>()), dist2 = getDistance2D(center, newPos.cast<double>());
+            double k = dist2 / dist1;
+            Vector3d scale_params(k, k, k);
             transformManager.transformModel(model, Vector3d(0, 0, 0), scale_params, Vector3d(0, 0, 0));
+            renderScene();
+        }
+    }
+    catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
+void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
+    shared_ptr<Model> model = selectionManager.getSelectedModel();
+    try {
+        if (model) {
+            showStatusMessage("Now " + model->getName() + " is rotating");
+
+            Vector2d center = model->getDetails()->getCenter().getScreenPosition();
+            Vector3d rotate_params((lastPos.x() - newPos.x())*0.01, (lastPos.y() - newPos.y())*0.01, 0); // TODO: Сделать нормальный поворот
+            transformManager.transformModel(model, Vector3d(0, 0, 0), Vector3d(1, 1, 1), rotate_params);
             renderScene();
         }
     }

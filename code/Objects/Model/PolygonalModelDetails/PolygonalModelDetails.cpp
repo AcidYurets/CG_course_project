@@ -15,7 +15,7 @@ Faces PolygonalModelDetails::getFaces() {
 	return faces;
 }
 
-Vector3d PolygonalModelDetails::getCenter() {
+Vertex PolygonalModelDetails::getCenter() {
 	return center;
 }
 
@@ -36,17 +36,17 @@ void PolygonalModelDetails::addFace(std::shared_ptr<Face> face) {
 }
 
 void PolygonalModelDetails::setArithmeticCenter() {
-	this->center = findArithmeticCenter();
+	this->center.setPosition(findArithmeticCenter());
 }
 
 void PolygonalModelDetails::transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params) {
-	this->move(-center);
+	this->move(-center.getTransformPosition());
 
 	this->scale(scale_params);
 	this->rotate(rotate_params);
 
-	center += move_params;
-	this->move(center);
+	center.move(move_params);
+	this->move(center.getTransformPosition());
 }
 
 Vector3d PolygonalModelDetails::findArithmeticCenter() {

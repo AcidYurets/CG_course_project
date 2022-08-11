@@ -17,7 +17,7 @@ public:
 	Vertices getVertices();
 	Edges getEdges();
 	Faces getFaces();	
-	Vector3d getCenter();
+	Vertex getCenter();
 	
 	void addVertex(std::shared_ptr<Vertex> vert);
 	void addEdge(std::shared_ptr<Edge> edge);
@@ -39,6 +39,7 @@ private:
 	Vertices vertices;
 	Edges edges;
 	Faces faces;
-	Vector3d center;
+
+	Vertex center;
 };
 

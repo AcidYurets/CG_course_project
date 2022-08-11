@@ -22,6 +22,7 @@ public slots:
 
     void objectMoveSlot(Vector2i lastPos, Vector2i newPos);
     void objectScaleSlot(Vector2i lastPos, Vector2i newPos);
+    void objectRotateSlot(Vector2i lastPos, Vector2i newPos);
 
 private:
     void setupScene();

@@ -30,6 +30,9 @@ void Display::mouseMoveEvent(QMouseEvent* mouse) {
     else if (keySClicked) {
         emit objectScaleSignal(Vector2i(cursor.x(), cursor.y()), Vector2i(mouse->x(), mouse->y()));
     }
+    else if (keyRClicked) {
+        emit objectRotateSignal(Vector2i(cursor.x(), cursor.y()), Vector2i(mouse->x(), mouse->y()));
+    }
     cursor = mouse->pos();
 }
 

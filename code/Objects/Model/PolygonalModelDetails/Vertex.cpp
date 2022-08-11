@@ -2,19 +2,19 @@
 
 Vertex::Vertex() : position(0, 0, 0), transMatrix(Matrix4d::Identity()) { }
 
-Vertex::Vertex(Vector3d pos) : Vertex()
-{
+Vertex::Vertex(Vector3d pos) : Vertex() {
 	position = pos;
 }
 
-Vector3d Vertex::getPosition()
-{
+Vertex::Vertex(double x, double y, double z) : Vertex(Vector3d(x, y, z)) { }
+
+Vector3d Vertex::getPosition() {
 	return position;
 }
 
-void Vertex::setPosition(Vector3d pos)
-{
+void Vertex::setPosition(Vector3d pos) {
 	position = pos;
+	transMatrix = Matrix4d::Identity();
 }
 
 Vector3d Vertex::getTransformPosition() {
@@ -100,7 +100,7 @@ void Vertex::rotateZ(const double angle)
 
 
 
-double getDistance2D(Vector2i v1, Vector2i v2)
+double getDistance2D(Vector2d v1, Vector2d v2)
 {
 	return sqrt((v1.x() - v2.x()) * (v1.x() - v2.x()) + (v1.y() - v2.y()) * (v1.y() - v2.y()));
 }

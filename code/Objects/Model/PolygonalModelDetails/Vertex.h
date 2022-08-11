@@ -11,6 +11,7 @@ class Vertex
 public:
 	Vertex();
 	explicit Vertex(Vector3d pos);
+	Vertex(double x, double y, double z);
 
 	Vector3d getPosition();
 	void setPosition(Vector3d pos);
@@ -31,4 +32,4 @@ private:
 	Matrix4d transMatrix;
 };
 
-double getDistance2D(Vector2i v1, Vector2i v2);
+double getDistance2D(Vector2d v1, Vector2d v2);
