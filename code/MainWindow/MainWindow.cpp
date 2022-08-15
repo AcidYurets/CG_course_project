@@ -42,8 +42,8 @@ void MainWindow::mouseClickSlot(Vector2i pos) {
 }
 
 void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
-    shared_ptr<Model> model = selectionManager.getSelectedModel();
     try {
+        shared_ptr<Model> model = selectionManager.getSelectedModel();
         if (model) {
             showStatusMessage("Now " + model->getName() + " is moving");
 
@@ -57,8 +57,8 @@ void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
 }
 
 void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
-    shared_ptr<Model> model = selectionManager.getSelectedModel();
     try {
+        shared_ptr<Model> model = selectionManager.getSelectedModel();
         if (model) {
             showStatusMessage("Now " + model->getName() + " is scaling");
 
@@ -74,8 +74,8 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
 }
 
 void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
-    shared_ptr<Model> model = selectionManager.getSelectedModel();
     try {
+        shared_ptr<Model> model = selectionManager.getSelectedModel();
         if (model) {
             showStatusMessage("Now " + model->getName() + " is rotating");
 

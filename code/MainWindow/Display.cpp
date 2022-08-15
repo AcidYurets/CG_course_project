@@ -23,7 +23,6 @@ void Display::mouseReleaseEvent(QMouseEvent* mouse) {
 }
 
 void Display::mouseMoveEvent(QMouseEvent* mouse) {
-
     if (keyGClicked) {
         emit objectMoveSignal(Vector2i(cursor.x(), cursor.y()), Vector2i(mouse->x(), mouse->y()));
     }
@@ -51,11 +50,13 @@ void Display::keyReleaseEvent(QKeyEvent* key) {
         keyGClicked = false;
         keySClicked = true;
         keyRClicked = false;
+        qDebug() << "Key S clicked";
         break;
     case(Qt::Key_R):
         keyGClicked = false;
         keySClicked = false;
         keyRClicked = true;
+        qDebug() << "Key R clicked";
         break;
     }
 }
