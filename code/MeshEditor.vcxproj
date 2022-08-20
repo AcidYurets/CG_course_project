@@ -23,6 +23,7 @@
     <ClCompile Include="Objects\Model\PolygonalModelDetails\Face.cpp" />
     <ClCompile Include="Objects\Model\PolygonalModelDetails\Vertex.cpp" />
     <ClCompile Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.cpp" />
+    <ClCompile Include="RenderManagement\Drawer\Drawer.cpp" />
     <ClCompile Include="RenderManagement\RenderManager.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="SelectionManagement\SelectionManager.cpp" />
@@ -49,6 +50,7 @@
     <ClInclude Include="Objects\Model\PolygonalModelDetails\Vertex.h" />
     <ClInclude Include="Objects\Object.h" />
     <ClInclude Include="Objects\Model\PolygonalModelDetails\PolygonalModelDetails.h" />
+    <ClInclude Include="RenderManagement\Drawer\Drawer.h" />
     <ClInclude Include="RenderManagement\RenderManager.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="SelectionManagement\SelectionManager.h" />

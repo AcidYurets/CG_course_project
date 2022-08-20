@@ -7,6 +7,9 @@
 #include "FileManagement/FileManager.h"
 #include "RenderManagement/RenderManager.h"
 
+#define START_WINDOW_WIDTH 980
+#define START_WINDOW_HEIGHT 660
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -27,6 +30,7 @@ public slots:
 private:
     void setupScene();
     void renderScene();
+    void resizeEvent(QResizeEvent* event);
 
     void showStatusMessage(string message);
 
@@ -37,5 +41,4 @@ private:
     FileManager fileManager;
     
     shared_ptr<Scene> scene;
-    shared_ptr<QGraphicsScene> graphicsScene;
 };

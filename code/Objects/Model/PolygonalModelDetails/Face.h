@@ -10,6 +10,8 @@ class Face
 public:
 	Face();
 	Face(Edges edges, Vertices vertices);
+
+	Vertices getVertices();
 	
 private:
 	Edges edges;

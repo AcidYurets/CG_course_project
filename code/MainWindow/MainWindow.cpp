@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "RenderManagement/Drawer/Drawer.h"
 #include "Exceptions/Exceptions.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -6,6 +7,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui = new Ui::MainWindowUI();
     ui->setupUi(this);
     setupScene();
+
+    QString fileName = "../data/scenes/simpleScene.sol";
+    this->scene = fileManager.loadScene(fileName.toStdString());
+    renderScene();
+    //ui->display->resetTransform();
 
 
     connect(this->ui->open, &QAction::triggered, this, &MainWindow::openFileSlot);
@@ -22,14 +28,17 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::openFileSlot() {
-   // QString fileName = QFileDialog::getOpenFileName(this,
-   //     tr("Открыть файл"), "../data/scenes", tr("*.sol"));
+   QString fileName = QFileDialog::getOpenFileName(this,
+       tr("Открыть файл"), "../data/scenes", tr("*.sol"));
 
-    QString fileName = "../data/scenes/simpleScene.sol";
+    //QString fileName = "../data/scenes/simpleScene.sol";
+    
+    try {
+        this->scene = fileManager.loadScene(fileName.toStdString());
 
-    this->scene = fileManager.loadScene(fileName.toStdString());
-
-    renderScene();
+        renderScene();
+    }
+    catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }
 
 void MainWindow::mouseClickSlot(Vector2i pos) {
@@ -80,7 +89,7 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
             showStatusMessage("Now " + model->getName() + " is rotating");
 
             Vector2d center = model->getDetails()->getCenter().getScreenPosition();
-            Vector3d rotate_params((lastPos.x() - newPos.x())*0.01, (lastPos.y() - newPos.y())*0.01, 0); // TODO: Сделать нормальный поворот
+            Vector3d rotate_params((lastPos.y() - newPos.y())*0.01, -(lastPos.x() - newPos.x())*0.01, 0); // TODO: Сделать нормальный поворот
             transformManager.transformModel(model, Vector3d(0, 0, 0), Vector3d(1, 1, 1), rotate_params);
             renderScene();
         }
@@ -89,21 +98,30 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 }
 
 void MainWindow::setupScene() {
-    graphicsScene = std::make_shared<QGraphicsScene>(ui->display);
-    this->graphicsScene->setSceneRect(0, 0, ui->display->width(), ui->display->height());
+    ui->display->setGeometry(15, 57, 730, 549);
+    shared_ptr<QGraphicsScene> graphicsScene = make_shared<QGraphicsScene>(ui->display);
+    graphicsScene->setSceneRect(0, 0, ui->display->width(), ui->display->height());
     ui->display->setScene(graphicsScene.get());
+    shared_ptr<Drawer> drawer = make_shared<Drawer>(graphicsScene);
+    renderManager.setDrawer(drawer);
 
     ui->display->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     ui->display->setInteractive(true);
+    ui->display->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->display->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 void MainWindow::renderScene() {
     try {
-        if (!scene) throw EmptyException(EXCEPCION_ARGS, "Scene was't created");
-        renderManager.renderScene(graphicsScene.get(), scene);
+        renderManager.renderScene(scene, ui->display->geometry()); 
     }
     catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }
+
+void MainWindow::resizeEvent(QResizeEvent* event) {
+    renderScene();
+}
+
 
 void MainWindow::showStatusMessage(string message) {
     ui->statusbar->showMessage(QString::fromStdString(message));

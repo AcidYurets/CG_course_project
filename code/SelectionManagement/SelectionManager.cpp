@@ -1,6 +1,8 @@
 #include "SelectionManager.h"
 #include "Exceptions/Exceptions.h"
 
+SelectionManager::SelectionManager() : selectedModel(nullptr), selectedFaces(0), selectedEdges(0), selectedVertices(0) { }
+
 void SelectionManager::selectModel(shared_ptr<Scene> &scene, Vector2i mousePos) {
 	// TODO: Реализовать нормальный выбор модели
 	if (!scene) throw EmptyException(EXCEPCION_ARGS, "Scene was't created");

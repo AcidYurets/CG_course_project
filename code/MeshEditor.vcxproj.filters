@@ -63,6 +63,9 @@
     <ClCompile Include="TransformManagement\TransformManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderManagement\Drawer\Drawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow\MainWindow.h">
@@ -121,6 +124,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TransformManagement\TransformManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManagement\Drawer\Drawer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
