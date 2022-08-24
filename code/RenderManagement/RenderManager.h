@@ -10,16 +10,16 @@ public:
 	shared_ptr<Drawer> getDrawer();
 	void setDrawer(const shared_ptr<Drawer>& drawer);
 
+	void processPixel(Vector2d p, double z, QRgb color = Qt::black);
+	void processPixel(Vector3d p, QRgb color = Qt::black);
+	void processPixel(double x, double y, double z, QRgb color = Qt::black);
+
+	void processLine(Vector3d p1, Vector3d p2, QRgb color = Qt::black);
+
 	void renderScene(const shared_ptr<Scene> &scene, const QRectF& geometry);
-
-	void setPixel(Vector2d p, QRgb color = Qt::black);
-	void setPixel(double x, double y, QRgb color = Qt::black);
-
-	// Временный метод. Для основной программы он не нужен
-	void setLine(Vector2d p1, Vector2d p2, QRgb color = Qt::black);
-
 
 private:
 	shared_ptr<Drawer> drawer = nullptr;
-	MatrixX<QRgb> frameBuffer = MatrixX<QRgb>();
+	MatrixX<double> zBuffer;
+	MatrixX<QRgb> frameBuffer;
 };

@@ -16,8 +16,12 @@ public:
 	Vector3d getPosition();
 	void setPosition(Vector3d pos);
 
+	// Метод находит реальное местоположение вершины без учета местоположения камеры
 	Vector3d getTransformPosition();
-	Vector2d getScreenPosition();
+
+	// Метод находит местоположение вершины на экране с учетом камеры 
+	// и параметров отображения (например, перспективы)
+	Vector3d getScreenPosition(Matrix4d cameraTransMatrix, bool perspective = false);
 
 	void move(const Vector3d move_params);
 	void scale(const Vector3d scale_params);

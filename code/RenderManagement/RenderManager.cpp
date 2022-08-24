@@ -11,26 +11,30 @@ void RenderManager::setDrawer(const shared_ptr<Drawer>& drawer) {
 	this->drawer = drawer;
 }
 
-void RenderManager::setPixel(Vector2d dp, QRgb color) {
-    Vector2i p = dp.cast<int>();
+void RenderManager::processPixel(Vector2d p, double z, QRgb color) {
+    Vector2i roundedP = p.cast<int>();
     // TODO: исправить
     // if (!frameBuffer) throw EmptyException(EXCEPCION_ARGS, "Image has't been initialized"); 
-    if (p.x() < 0 || p.x() >= frameBuffer.rows() || p.y() < 0 || p.y() >= frameBuffer.cols())
+    if (roundedP.x() < 0 || roundedP.x() >= frameBuffer.rows() 
+        || roundedP.y() < 0 || roundedP.y() >= frameBuffer.cols())
         return;
 
-    // image->setPixelColor(p.x(), p.y(), color);
-    frameBuffer(p.x(), p.y()) = color;
+    frameBuffer(roundedP.x(), roundedP.y()) = color;
 }
 
-void RenderManager::setPixel(double x, double y, QRgb color) {
-    this->setPixel(Vector2d(x, y), color);
+void RenderManager::processPixel(Vector3d p, QRgb color) {
+    this->processPixel(Vector2d(p.x(), p.y()), p.z(), color);
 }
 
-void RenderManager::setLine(Vector2d p1, Vector2d p2, QRgb color) {
+void RenderManager::processPixel(double x, double y, double z, QRgb color) {
+    this->processPixel(Vector2d(x, y), z, color);
+}
+
+void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
     double xStart = p1.x(), xEnd = p2.x(), yStart = p1.y(), yEnd = p2.y();
 
     if (xStart == xEnd && yStart == yEnd) {
-        this->setPixel(p1, color);
+        this->processPixel(p1, color);
         return;
     }
 
@@ -63,7 +67,7 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
     drawer->initDrawer(geometry);
 
 	if (!scene) {
-		drawer->drawImage();
+		drawer->drawScene(frameBuffer);
 		return;
 	}
 	// TODO: Сделать через Z буфер
@@ -84,8 +88,9 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 		Edges edges = model->getDetails()->getEdges();
 		// Рисуем все ребра
 		for (auto& edge : edges) {
-			drawer->setLine(edge->getVertices()[0]->getScreenPosition(), edge->getVertices()[1]->getScreenPosition());
+		    this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera()->), edge->getVertices()[1]->getScreenPosition());
 		}
 	}
 	drawer->drawImage();
 }
+

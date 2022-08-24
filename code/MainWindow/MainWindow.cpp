@@ -88,7 +88,7 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
         if (model) {
             showStatusMessage("Now " + model->getName() + " is rotating");
 
-            Vector2d center = model->getDetails()->getCenter().getScreenPosition();
+            // Vector2d center = model->getDetails()->getCenter().getScreenPosition();
             Vector3d rotate_params((lastPos.y() - newPos.y())*0.01, -(lastPos.x() - newPos.x())*0.01, 0); // TODO: Сделать нормальный поворот
             transformManager.transformModel(model, Vector3d(0, 0, 0), Vector3d(1, 1, 1), rotate_params);
             renderScene();

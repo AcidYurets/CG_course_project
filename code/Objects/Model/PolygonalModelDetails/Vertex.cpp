@@ -27,12 +27,12 @@ Vector3d Vertex::getTransformPosition() {
 	return res;
 }
 
-Vector2d Vertex::getScreenPosition() {
+Vector3d Vertex::getScreenPosition(Matrix4d cameraTransMatrix, bool perspective) {
 	Vector3d transformPosition = getTransformPosition();
 	/*
 	* TODO: Тут будет магия!
 	*/
-	Vector2d res = Vector2d(transformPosition.x(), transformPosition.y());
+	Vector2d res = Vector2d(transformPosition.x(), transformPosition.y(), transformPosition.z());
 	return res;
 }
 
