@@ -1,11 +1,12 @@
 #pragma once
 #include <memory>
 #include <QtWidgets>
+#include <QOpenGLWidget>
 #include <Eigen/Dense>
 using namespace Eigen;
 using namespace std;
 
-class Display : public QWidget {
+class Display : public QOpenGLWidget {
     Q_OBJECT
 
 public:

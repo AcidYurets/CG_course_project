@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>980</width>
+    <width>1008</width>
     <height>658</height>
    </rect>
   </property>
@@ -15,9 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="Display" name="display"/>
-    </item>
     <item row="0" column="2" rowspan="2">
      <widget class="QFrame" name="rightFrame">
       <property name="frameShape">
@@ -435,6 +432,19 @@
       </layout>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="Display" name="display">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -442,7 +452,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>980</width>
+     <width>1008</width>
      <height>22</height>
     </rect>
    </property>
@@ -489,7 +499,7 @@
  <customwidgets>
   <customwidget>
    <class>Display</class>
-   <extends>QGraphicsView</extends>
+   <extends>QOpenGLWidget</extends>
    <header>Display.h</header>
   </customwidget>
  </customwidgets>
