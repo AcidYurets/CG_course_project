@@ -99,22 +99,22 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 }
 
 void MainWindow::setupScene() {
-    ui->display->setGeometry(15, 57, 730, 549);
-    shared_ptr<QGraphicsScene> graphicsScene = make_shared<QGraphicsScene>(ui->display);
-    graphicsScene->setSceneRect(ui->display->geometry());
-    ui->display->setScene(graphicsScene.get());
-    shared_ptr<Drawer> drawer = make_shared<Drawer>(graphicsScene);
-    renderManager.setDrawer(drawer);
-
-    // ui->display->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    ui->display->setInteractive(true);
-    ui->display->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->display->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    shared_ptr<QImage> image = make_shared<QImage>(ui->display->width(), ui->display->height(), QImage::Format_RGB32);
+    ui->display->initImage(image);
+    renderManager.initImage(image);
+    //ui->display->setGeometry(15, 57, 730, 549);
+    //shared_ptr<QGraphicsScene> graphicsScene = make_shared<QGraphicsScene>(ui->display);
+    //graphicsScene->setSceneRect(ui->display->geometry());
+    //ui->display->setScene(graphicsScene.get());
+    // shared_ptr<Drawer> drawer = make_shared<Drawer>(graphicsScene);
+    // renderManager.setDrawer(drawer);
 }
 
 void MainWindow::renderScene() {
     try {
-        renderManager.renderScene(scene, ui->display->geometry()); 
+        renderManager.renderScene(scene, ui->display->geometry());
+
+        ui->display->update();
     }
     catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }

@@ -7,9 +7,6 @@
 #include "FileManagement/FileManager.h"
 #include "RenderManagement/RenderManager.h"
 
-#define START_WINDOW_WIDTH 980
-#define START_WINDOW_HEIGHT 660
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

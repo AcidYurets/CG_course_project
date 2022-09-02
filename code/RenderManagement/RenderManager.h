@@ -7,13 +7,13 @@ class RenderManager
 public:
 	RenderManager();
 
-	shared_ptr<Drawer> getDrawer();
-	void setDrawer(const shared_ptr<Drawer>& drawer);
+	void initImage(shared_ptr<QImage> image);
 
+	// Рендерит сцену во frameBuffer
 	void renderScene(const shared_ptr<Scene> &scene, const QRectF& geometry);
 
 private:
-	void init(const QRectF& geometry, QRgb background = qRgb(100, 100, 100));
+	void initBuffers(const QRectF& geometry, QRgb background = qRgb(100, 100, 100));
 		
 	void processPixel(Vector2d p, double z, QRgb color = Qt::black);
 	void processPixel(Vector3d p, QRgb color = Qt::black);
@@ -23,5 +23,5 @@ private:
 
 	shared_ptr<Drawer> drawer = nullptr;
 	MatrixX<double> zBuffer;
-	MatrixX<QRgb> frameBuffer;
+	shared_ptr<QImage> frameBuffer;
 };

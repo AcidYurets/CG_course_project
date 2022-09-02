@@ -1,13 +1,17 @@
 #pragma once
+#include <memory>
 #include <QtWidgets>
 #include <Eigen/Dense>
 using namespace Eigen;
+using namespace std;
 
-class Display : public QGraphicsView {
+class Display : public QWidget {
     Q_OBJECT
 
 public:
     Display(QWidget* parent);
+
+    void initImage(shared_ptr<QImage> image);
 
     void mousePressEvent(QMouseEvent* mouse);
     void mouseReleaseEvent(QMouseEvent* mouse);
@@ -23,11 +27,15 @@ signals:
     void objectScaleSignal(Vector2i lastPos, Vector2i newPos);
     void objectRotateSignal(Vector2i lastPos, Vector2i newPos);
 
+protected:
+    void paintEvent(QPaintEvent* e);
+
 private:
     QPoint cursor;
     bool keyGClicked = false;
     bool keySClicked = false;
     bool keyRClicked = false;
 
+    shared_ptr<QImage> image;
 };
 

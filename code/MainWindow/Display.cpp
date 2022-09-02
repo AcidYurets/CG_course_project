@@ -1,7 +1,14 @@
 #include "Display.h"
 
-Display::Display(QWidget* parent = nullptr) : QGraphicsView(parent) { 
+Display::Display(QWidget* parent = nullptr) : QWidget(parent) { 
+    setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
+}
+
+void Display::initImage(shared_ptr<QImage> image) {
+    this->image = image;
+
+    update();
 }
 
 void Display::mousePressEvent(QMouseEvent* mouse) {
@@ -59,4 +66,11 @@ void Display::keyReleaseEvent(QKeyEvent* key) {
         qDebug() << "Key R clicked";
         break;
     }
+}
+
+void Display::paintEvent(QPaintEvent* e) {
+    Q_UNUSED(e);
+
+    QPainter painter(this);
+    painter.drawImage(0, 0, *image);
 }

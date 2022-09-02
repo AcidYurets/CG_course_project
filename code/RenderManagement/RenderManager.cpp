@@ -3,19 +3,14 @@
 
 RenderManager::RenderManager() : drawer(nullptr) { }
 
-shared_ptr<Drawer> RenderManager::getDrawer() {
-	return drawer;
-}
-
-void RenderManager::setDrawer(const shared_ptr<Drawer>& drawer) {
-	this->drawer = drawer;
+void RenderManager::initImage(shared_ptr<QImage> image) {
+    this->frameBuffer = image;
 }
 
 void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& geometry) {
-    this->init(geometry);
+    this->initBuffers(geometry);
 
     if (!scene) {
-        drawer->drawScene(frameBuffer);
         return;
     }
     // TODO: Сделать через Z буфер
@@ -40,29 +35,26 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
                 edge->getVertices()[1]->getScreenPosition(scene->getCamera()));
         }
     }
-    drawer->drawScene(frameBuffer);
 }
 
 
-void RenderManager::init(const QRectF& geometry, QRgb background) {
+void RenderManager::initBuffers(const QRectF& geometry, QRgb background) {
     zBuffer.resize(geometry.width(), geometry.height());
     zBuffer.fill(-1); // TODO: Установить нормальное значение заполнения
 
-    frameBuffer.resize(geometry.width(), geometry.height());
-    frameBuffer.fill(background);
-
-    drawer->initDrawer(geometry);
+    *frameBuffer = frameBuffer->scaled(geometry.width(), geometry.height(), Qt::KeepAspectRatio);
+    frameBuffer->fill(background);
 }
 
 void RenderManager::processPixel(Vector2d p, double z, QRgb color) {
     Vector2i roundedP = p.cast<int>();
     // TODO: исправить
     // if (!frameBuffer) throw EmptyException(EXCEPCION_ARGS, "Image has't been initialized"); 
-    if (roundedP.x() < 0 || roundedP.x() >= frameBuffer.rows() 
-        || roundedP.y() < 0 || roundedP.y() >= frameBuffer.cols())
+    if (roundedP.x() < 0 || roundedP.x() >= frameBuffer->height() 
+        || roundedP.y() < 0 || roundedP.y() >= frameBuffer->height())
         return;
 
-    frameBuffer(roundedP.x(), roundedP.y()) = color;
+    frameBuffer->setPixel(roundedP.x(), roundedP.y(), color);
 }
 
 void RenderManager::processPixel(Vector3d p, QRgb color) {
