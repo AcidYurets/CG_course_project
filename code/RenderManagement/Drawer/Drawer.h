@@ -21,6 +21,7 @@ public:
 
 private:
 	shared_ptr<QGraphicsScene> graphicsScene = nullptr;
+	uchar* data = nullptr;
 	// shared_ptr<QImage> image = nullptr;
 };
 

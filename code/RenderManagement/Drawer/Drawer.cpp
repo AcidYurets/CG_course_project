@@ -1,3 +1,4 @@
+#include <qDebug>
 #include "Drawer.h"
 #include "Exceptions/Exceptions.h"
 
@@ -24,14 +25,20 @@ void Drawer::clearScene() {
 }
 
 void Drawer::drawScene(MatrixX<QRgb> frameBuffer) {
-    shared_ptr<QImage> image = make_shared<QImage>(frameBuffer.rows(), frameBuffer.cols(), QImage::Format_RGB32);
+    data = (uchar*) frameBuffer.data();
+    QImage image = QImage(frameBuffer.rows(), frameBuffer.cols(), QImage::Format_RGB32);
 
-    for (int y = 0; y < image->height(); ++y) {
-        QRgb* line = reinterpret_cast<QRgb*>(image->scanLine(y));
-        for (int x = 0; x < image->width(); ++x) {
+    /*for (int y = 0; y < image.height(); ++y) {
+        QRgb* line = reinterpret_cast<QRgb*>(image.scanLine(y));
+        for (int x = 0; x < image.width(); ++x) {
             QRgb& pixel = line[x];
-            pixel = frameBuffer(y, x);
+            pixel = frameBuffer(x, y);
+            // qDebug() << "x = " << x << " y = " << y << "pixel = " << pixel;
         }
-    }
-	graphicsScene->addPixmap(QPixmap::fromImage(*image));
+    }*/ 
+    
+    image.setPixel(QPoint(5, 5), qRgb(100, 100, 100));
+    qDebug() << image.pixel(QPoint(5, 5)) << image.pixel(QPoint(5, 6));
+    image.save("QImage.png", "PNG");
+	graphicsScene->addPixmap(QPixmap::fromImage(image));
 }

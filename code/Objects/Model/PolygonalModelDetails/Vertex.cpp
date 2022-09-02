@@ -1,4 +1,5 @@
 #include "Vertex.h"
+#include "Objects/Camera/Camera.h"
 
 Vertex::Vertex() : position(0, 0, 0), transMatrix(Matrix4d::Identity()) { }
 
@@ -27,12 +28,12 @@ Vector3d Vertex::getTransformPosition() {
 	return res;
 }
 
-Vector3d Vertex::getScreenPosition(Matrix4d cameraTransMatrix, bool perspective) {
+Vector3d Vertex::getScreenPosition(shared_ptr<Camera> camera, bool perspective) {
 	Vector3d transformPosition = getTransformPosition();
 	/*
 	* TODO: Тут будет магия!
 	*/
-	Vector2d res = Vector2d(transformPosition.x(), transformPosition.y(), transformPosition.z());
+	Vector3d res = Vector3d(transformPosition.x(), transformPosition.y(), transformPosition.z());
 	return res;
 }
 

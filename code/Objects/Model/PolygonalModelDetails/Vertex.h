@@ -5,6 +5,9 @@
 #include <Eigen/Dense>
 #include <QDebug>
 using namespace Eigen;
+using namespace std;
+
+class Camera;
 
 class Vertex
 {
@@ -16,12 +19,12 @@ public:
 	Vector3d getPosition();
 	void setPosition(Vector3d pos);
 
-	// Метод находит реальное местоположение вершины без учета местоположения камеры
+	// РњРµС‚РѕРґ РЅР°С…РѕРґРёС‚ СЂРµР°Р»СЊРЅРѕРµ РјРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРµ РІРµСЂС€РёРЅС‹ Р±РµР· СѓС‡РµС‚Р° РјРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёСЏ РєР°РјРµСЂС‹
 	Vector3d getTransformPosition();
 
-	// Метод находит местоположение вершины на экране с учетом камеры 
-	// и параметров отображения (например, перспективы)
-	Vector3d getScreenPosition(Matrix4d cameraTransMatrix, bool perspective = false);
+	// РњРµС‚РѕРґ РЅР°С…РѕРґРёС‚ РјРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРµ РІРµСЂС€РёРЅС‹ РЅР° СЌРєСЂР°РЅРµ СЃ СѓС‡РµС‚РѕРј РєР°РјРµСЂС‹ 
+	// Рё РїР°СЂР°РјРµС‚СЂРѕРІ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ (РЅР°РїСЂРёРјРµСЂ, РїРµСЂСЃРїРµРєС‚РёРІС‹)
+	Vector3d getScreenPosition(shared_ptr<Camera> camera, bool perspective = false);
 
 	void move(const Vector3d move_params);
 	void scale(const Vector3d scale_params);

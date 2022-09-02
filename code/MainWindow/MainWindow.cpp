@@ -71,8 +71,9 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
         if (model) {
             showStatusMessage("Now " + model->getName() + " is scaling");
 
-            Vector2d center = model->getDetails()->getCenter().getScreenPosition();
-            double dist1 = getDistance2D(center, lastPos.cast<double>()), dist2 = getDistance2D(center, newPos.cast<double>());
+            Vector3d center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera());
+            Vector2d center2d = center.head<2>();
+            double dist1 = getDistance2D(center2d, lastPos.cast<double>()), dist2 = getDistance2D(center2d, newPos.cast<double>());
             double k = dist2 / dist1;
             Vector3d scale_params(k, k, k);
             transformManager.transformModel(model, Vector3d(0, 0, 0), scale_params, Vector3d(0, 0, 0));
@@ -100,12 +101,12 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 void MainWindow::setupScene() {
     ui->display->setGeometry(15, 57, 730, 549);
     shared_ptr<QGraphicsScene> graphicsScene = make_shared<QGraphicsScene>(ui->display);
-    graphicsScene->setSceneRect(0, 0, ui->display->width(), ui->display->height());
+    graphicsScene->setSceneRect(ui->display->geometry());
     ui->display->setScene(graphicsScene.get());
     shared_ptr<Drawer> drawer = make_shared<Drawer>(graphicsScene);
     renderManager.setDrawer(drawer);
 
-    ui->display->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    // ui->display->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     ui->display->setInteractive(true);
     ui->display->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->display->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

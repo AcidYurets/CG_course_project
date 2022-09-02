@@ -11,6 +11,49 @@ void RenderManager::setDrawer(const shared_ptr<Drawer>& drawer) {
 	this->drawer = drawer;
 }
 
+void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& geometry) {
+    this->init(geometry);
+
+    if (!scene) {
+        drawer->drawScene(frameBuffer);
+        return;
+    }
+    // TODO: Сделать через Z буфер
+
+    for (auto& model : scene->getModels()) {
+        // Нагрузка для проверки
+        for (auto& face : model->getDetails()->getFaces()) {
+            for (auto& v : face->getVertices()) {
+                auto pos = v->getPosition();
+                double test = (pos.x() + pos.y() + pos.z()) * (pos.x() + pos.y() + pos.z());
+                // qDebug() << test;
+            }
+        }
+        // Нагрузка для проверки
+
+
+
+        Edges edges = model->getDetails()->getEdges();
+        // Рисуем все ребра
+        for (auto& edge : edges) {
+            this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera()),
+                edge->getVertices()[1]->getScreenPosition(scene->getCamera()));
+        }
+    }
+    drawer->drawScene(frameBuffer);
+}
+
+
+void RenderManager::init(const QRectF& geometry, QRgb background) {
+    zBuffer.resize(geometry.width(), geometry.height());
+    zBuffer.fill(-1); // TODO: Установить нормальное значение заполнения
+
+    frameBuffer.resize(geometry.width(), geometry.height());
+    frameBuffer.fill(background);
+
+    drawer->initDrawer(geometry);
+}
+
 void RenderManager::processPixel(Vector2d p, double z, QRgb color) {
     Vector2i roundedP = p.cast<int>();
     // TODO: исправить
@@ -57,40 +100,10 @@ void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
     double curY = yStart;
 
     for (int i = 0; i < length; i++) {
-        this->setPixel(round(curX), round(curY), color);
+        // TODO: Посчитать координату z
+        this->processPixel(round(curX), round(curY), 0, color);
         curX += deltaX;
         curY += deltaY;
     }
-}
-
-void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& geometry) {
-    drawer->initDrawer(geometry);
-
-	if (!scene) {
-		drawer->drawScene(frameBuffer);
-		return;
-	}
-	// TODO: Сделать через Z буфер
-
-	for (auto& model : scene->getModels()) {
-		// Нагрузка для проверки
-		for (auto& face : model->getDetails()->getFaces()) {
-			for (auto& v : face->getVertices()) {
-				auto pos = v->getPosition();
-				double test = (pos.x() + pos.y() + pos.z()) * (pos.x() + pos.y() + pos.z());
-				// qDebug() << test;
-			}
-		}
-		// Нагрузка для проверки
-
-
-
-		Edges edges = model->getDetails()->getEdges();
-		// Рисуем все ребра
-		for (auto& edge : edges) {
-		    this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera()->), edge->getVertices()[1]->getScreenPosition());
-		}
-	}
-	drawer->drawImage();
 }
 
