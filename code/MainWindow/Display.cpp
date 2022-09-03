@@ -1,8 +1,8 @@
 #include "Display.h"
 
 Display::Display(QWidget* parent = nullptr) : QOpenGLWidget(parent) {
-    setFocusPolicy(Qt::StrongFocus);
-    setMouseTracking(true);
+    // setFocusPolicy(Qt::StrongFocus);
+    setMouseTracking(true); 
 }
 
 void Display::initImage(shared_ptr<QImage> image) {
@@ -15,6 +15,7 @@ void Display::mousePressEvent(QMouseEvent* mouse) {
 }
 
 void Display::mouseReleaseEvent(QMouseEvent* mouse) {
+    qDebug() << "Mouse clicked";
     if (keyGClicked || keySClicked || keyRClicked) {
         switch (mouse->button()) {
         case(Qt::LeftButton):
@@ -68,9 +69,8 @@ void Display::keyReleaseEvent(QKeyEvent* key) {
     }
 }
 
-void Display::paintEvent(QPaintEvent* e) {
-    Q_UNUSED(e);
-
+void Display::paintGL() {
     QPainter painter(this);
+
     painter.drawImage(0, 0, *image);
 }

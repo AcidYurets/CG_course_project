@@ -13,7 +13,7 @@ public:
 	void renderScene(const shared_ptr<Scene> &scene, const QRectF& geometry);
 
 private:
-	void initBuffers(const QRectF& geometry, QRgb background = qRgb(100, 100, 100));
+	void initBuffers(const QRectF& geometry, QRgb background = qRgb(200, 200, 200));
 		
 	void processPixel(Vector2d p, double z, QRgb color = Qt::black);
 	void processPixel(Vector3d p, QRgb color = Qt::black);

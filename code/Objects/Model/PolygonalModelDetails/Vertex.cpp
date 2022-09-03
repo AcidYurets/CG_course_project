@@ -1,9 +1,14 @@
 #include "Vertex.h"
 #include "Objects/Camera/Camera.h"
 
-Vertex::Vertex() : position(0, 0, 0), transMatrix(Matrix4d::Identity()) { }
+Vertex::Vertex() : position(0, 0, 0), transMatrix(Matrix4d::Identity()) {
+	// this->move(Vector3d(370, 280, 0));
+	// this->scale(Vector3d(100, 100, 100));
+}
 
 Vertex::Vertex(Vector3d pos) : Vertex() {
+	// pos *= 70;
+	// position = Vector3d(pos.x() + 370, pos.y() + 280, pos.z());
 	position = pos;
 }
 
@@ -30,10 +35,40 @@ Vector3d Vertex::getTransformPosition() {
 
 Vector3d Vertex::getScreenPosition(shared_ptr<Camera> camera, bool perspective) {
 	Vector3d transformPosition = getTransformPosition();
-	/*
-	* TODO: Тут будет магия!
-	*/
-	Vector3d res = Vector3d(transformPosition.x(), transformPosition.y(), transformPosition.z());
+	// transformPosition *= 100;
+
+	Vector4d beforeCameraTransform;
+	beforeCameraTransform << transformPosition, 1;
+
+	// TODO: инициализировать ее исходя из трансформации камеры
+	Matrix4d cameraTransMatrix {
+		{ 1, 0, 0, 0 },
+		{ 0, 1, 0, 0 },
+		{ 0, 0, 1, 0 },
+		{ 0, 0, 0, 1 } };
+	// cameraTransMatrix(2, 2) = 100;
+	// cameraTransMatrix(2, 3) = -0.01;
+
+	Matrix4d perspectiveTransMatrix {
+		{ 1, 0, 0, 0},
+		{ 0, 1, 0, 0 },
+		{ 0, 0, 1, 0.1 },
+		{ 0, 0, 0, 1 } };
+
+	cameraTransMatrix *= perspectiveTransMatrix;
+	
+
+	Vector4d afterTransformation = beforeCameraTransform.transpose() * cameraTransMatrix;
+	Vector3d res;
+	res << afterTransformation.x() / afterTransformation.w(), 
+			afterTransformation.y() / afterTransformation.w(),
+			afterTransformation.z() / afterTransformation.w();
+	// Vector3d res = Vector3d(transformPosition.x(), transformPosition.y(), transformPosition.z());
+
+	// Масштабируем и переносим в центр для корректного отображения
+	res *= 100;
+	res = Vector3d(res.x() + 370, res.y() + 280, res.z());
+
 	return res;
 }
 

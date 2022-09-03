@@ -29,7 +29,7 @@ signals:
     void objectRotateSignal(Vector2i lastPos, Vector2i newPos);
 
 protected:
-    void paintEvent(QPaintEvent* e);
+    void paintGL();
 
 private:
     QPoint cursor;

@@ -24,6 +24,11 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 				// qDebug() << test;
 			}
 		}
+		/*for (int i = 0; i < 400; i++) {
+			for (int j = 0; j < 400; j++) {
+				this->processPixel(200 + i, 200 + j, 0, qRgb(100, 200, 240));
+			}
+		}*/
 		// Нагрузка для проверки
 
 
@@ -35,11 +40,7 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 				edge->getVertices()[1]->getScreenPosition(scene->getCamera()));
 		}
 
-		/*for (int i = 0; i < 400; i++) {
-			for (int j = 0; j < 400; j++) {
-				this->processPixel(200 + i, 200 + j, 0, qRgb(100, 200, 240));
-			}
-		}*/
+		
 	}
 }
 
