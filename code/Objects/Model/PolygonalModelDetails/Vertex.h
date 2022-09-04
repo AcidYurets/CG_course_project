@@ -16,7 +16,7 @@ public:
 	explicit Vertex(Vector3d pos);
 	Vertex(double x, double y, double z);
 
-	Vector3d getPosition();
+	// Vector3d getPosition();
 	void setPosition(Vector3d pos);
 
 	// Метод находит реальное местоположение вершины без учета местоположения камеры

@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene/Scene.h"
-#include "Drawer/Drawer.h"
+#include <QWidget>
 
 class RenderManager
 {
@@ -24,7 +24,6 @@ private:
 
 	void processLine(Vector3d p1, Vector3d p2, QRgb color = Qt::black);
 
-	shared_ptr<Drawer> drawer = nullptr;
 	MatrixX<double> zBuffer;
 	shared_ptr<QImage> frameBuffer;
 

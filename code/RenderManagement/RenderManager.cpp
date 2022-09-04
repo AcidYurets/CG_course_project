@@ -1,7 +1,7 @@
 #include "RenderManager.h"
 #include "Exceptions/Exceptions.h"
 
-RenderManager::RenderManager() : drawer(nullptr) { }
+RenderManager::RenderManager() { }
 
 void RenderManager::initImage(shared_ptr<QImage> image) {
 	this->frameBuffer = image;

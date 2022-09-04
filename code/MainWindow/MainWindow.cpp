@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include "RenderManagement/Drawer/Drawer.h"
 #include "Exceptions/Exceptions.h"
 
 MainWindow::MainWindow(QWidget *parent)

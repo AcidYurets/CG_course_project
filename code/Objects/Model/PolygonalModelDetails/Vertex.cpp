@@ -15,9 +15,9 @@ Vertex::Vertex(Vector3d pos) : Vertex() {
 
 Vertex::Vertex(double x, double y, double z) : Vertex(Vector3d(x, y, z)) { }
 
-Vector3d Vertex::getPosition() {
+/*Vector3d Vertex::getPosition() {
 	return position;
-}
+}*/
 
 void Vertex::setPosition(Vector3d pos) {
 	position = pos;
