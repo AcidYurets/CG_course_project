@@ -36,6 +36,8 @@ private:
     bool keyGClicked = false;
     bool keySClicked = false;
     bool keyRClicked = false;
+    bool rightButtonClicked = false;
+
 
     shared_ptr<QImage> image;
 };

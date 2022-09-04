@@ -12,10 +12,23 @@ void Display::initImage(shared_ptr<QImage> image) {
 }
 
 void Display::mousePressEvent(QMouseEvent* mouse) {
+    switch (mouse->button()) {
+    case(Qt::RightButton):
+        rightButtonClicked = true;
+        break;
+    }
 }
 
 void Display::mouseReleaseEvent(QMouseEvent* mouse) {
     qDebug() << "Mouse clicked";
+
+    switch (mouse->button()) {
+    case(Qt::RightButton):
+        // тут тут тут тут тут
+        rightButtonClicked = false;
+        break;
+    }
+
     if (keyGClicked || keySClicked || keyRClicked) {
         switch (mouse->button()) {
         case(Qt::LeftButton):
