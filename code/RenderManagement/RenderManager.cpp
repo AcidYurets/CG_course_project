@@ -7,6 +7,14 @@ void RenderManager::initImage(shared_ptr<QImage> image) {
 	this->frameBuffer = image;
 }
 
+bool RenderManager::getPerspective() {
+	return isPerspective;
+}
+
+void RenderManager::setPerspective(bool isPerspective) {
+	this->isPerspective = isPerspective;
+}
+
 void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& geometry) {
 	this->initBuffers(geometry);
 
@@ -19,7 +27,7 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 		// Нагрузка для проверки
 		for (auto& face : model->getDetails()->getFaces()) {
 			for (auto& v : face->getVertices()) {
-				auto pos = v->getPosition();
+				auto pos = v->getTransformPosition();
 				double test = (pos.x() + pos.y() + pos.z()) * (pos.x() + pos.y() + pos.z());
 				// qDebug() << test;
 			}
@@ -36,11 +44,9 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 		Edges edges = model->getDetails()->getEdges();
 		// Рисуем все ребра
 		for (auto& edge : edges) {
-			this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera()),
-				edge->getVertices()[1]->getScreenPosition(scene->getCamera()));
+			this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective),
+				edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective));
 		}
-
-		
 	}
 }
 

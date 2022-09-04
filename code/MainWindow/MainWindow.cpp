@@ -98,6 +98,12 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
     catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }
 
+void MainWindow::on_projectionButton_clicked() {
+    renderManager.setPerspective(!renderManager.getPerspective());
+
+    renderScene();
+}
+
 void MainWindow::setupScene() {
     shared_ptr<QImage> image = make_shared<QImage>(ui->display->width(), ui->display->height(), QImage::Format_RGB32);
     ui->display->initImage(image);
@@ -106,11 +112,6 @@ void MainWindow::setupScene() {
     // TODO: Это костыль
     ui->display->setGeometry(9, 57, 758, 549);
     ui->display->setFocusPolicy(Qt::StrongFocus);
-    //shared_ptr<QGraphicsScene> graphicsScene = make_shared<QGraphicsScene>(ui->display);
-    //graphicsScene->setSceneRect(ui->display->geometry());
-    //ui->display->setScene(graphicsScene.get());
-    // shared_ptr<Drawer> drawer = make_shared<Drawer>(graphicsScene);
-    // renderManager.setDrawer(drawer);
 }
 
 void MainWindow::renderScene() {

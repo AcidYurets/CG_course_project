@@ -9,11 +9,14 @@ public:
 
 	void initImage(shared_ptr<QImage> image);
 
+	bool getPerspective();
+	void setPerspective(bool isPerspective);
+
 	// Рендерит сцену во frameBuffer
 	void renderScene(const shared_ptr<Scene> &scene, const QRectF& geometry);
 
 private:
-	void initBuffers(const QRectF& geometry, QRgb background = qRgb(200, 200, 200));
+	void initBuffers(const QRectF& geometry, QRgb background = qRgb(180, 180, 180));
 		
 	void processPixel(Vector2d p, double z, QRgb color = Qt::black);
 	void processPixel(Vector3d p, QRgb color = Qt::black);
@@ -24,4 +27,6 @@ private:
 	shared_ptr<Drawer> drawer = nullptr;
 	MatrixX<double> zBuffer;
 	shared_ptr<QImage> frameBuffer;
+
+	bool isPerspective = true;
 };

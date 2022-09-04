@@ -2,13 +2,14 @@
 #include "Objects/Camera/Camera.h"
 
 Vertex::Vertex() : position(0, 0, 0), transMatrix(Matrix4d::Identity()) {
-	// this->move(Vector3d(370, 280, 0));
-	// this->scale(Vector3d(100, 100, 100));
+	// Масштабируем и перемещаем в центр экрана
+	this->scale(Vector3d(100, 100, 100));
+	// TODO: Найти центр исходя из размера окна
+	this->move(Vector3d(370, 280, 0));
+	
 }
 
 Vertex::Vertex(Vector3d pos) : Vertex() {
-	// pos *= 70;
-	// position = Vector3d(pos.x() + 370, pos.y() + 280, pos.z());
 	position = pos;
 }
 
@@ -33,12 +34,9 @@ Vector3d Vertex::getTransformPosition() {
 	return res;
 }
 
-Vector3d Vertex::getScreenPosition(shared_ptr<Camera> camera, bool perspective) {
-	Vector3d transformPosition = getTransformPosition();
-	// transformPosition *= 100;
-
-	Vector4d beforeCameraTransform;
-	beforeCameraTransform << transformPosition, 1;
+Vector3d Vertex::getScreenPosition(shared_ptr<Camera> camera, bool isPerspective) {
+	Vector4d beforeTransform;
+	beforeTransform << position, 1;
 
 	// TODO: инициализировать ее исходя из трансформации камеры
 	Matrix4d cameraTransMatrix {
@@ -46,52 +44,42 @@ Vector3d Vertex::getScreenPosition(shared_ptr<Camera> camera, bool perspective) 
 		{ 0, 1, 0, 0 },
 		{ 0, 0, 1, 0 },
 		{ 0, 0, 0, 1 } };
-	// cameraTransMatrix(2, 2) = 100;
-	// cameraTransMatrix(2, 3) = -0.01;
 
-	Matrix4d perspectiveTransMatrix {
+	Matrix4d finalTransMatrix;
+	if (isPerspective) {
+		Matrix4d perspectiveTransMatrix {
 		{ 1, 0, 0, 0},
 		{ 0, 1, 0, 0 },
-		{ 0, 0, 1, 0.1 },
+		{ 0, 0, 1, 0.001 },
 		{ 0, 0, 0, 1 } };
 
-	cameraTransMatrix *= perspectiveTransMatrix;
-	
+		// TODO: Найти центр исходя из размера окна
+		Vector3d center(370, 280, 0);
 
-	Vector4d afterTransformation = beforeCameraTransform.transpose() * cameraTransMatrix;
+		finalTransMatrix = transMatrix * cameraTransMatrix
+			* moveMatrix(-center) * perspectiveTransMatrix * moveMatrix(center);
+	}
+	else {
+		finalTransMatrix = transMatrix * cameraTransMatrix;
+	}
+
+	Vector4d afterTransformation = beforeTransform.transpose() * finalTransMatrix;
 	Vector3d res;
 	res << afterTransformation.x() / afterTransformation.w(), 
 			afterTransformation.y() / afterTransformation.w(),
 			afterTransformation.z() / afterTransformation.w();
-	// Vector3d res = Vector3d(transformPosition.x(), transformPosition.y(), transformPosition.z());
-
-	// Масштабируем и переносим в центр для корректного отображения
-	res *= 100;
-	res = Vector3d(res.x() + 370, res.y() + 280, res.z());
 
 	return res;
 }
 
 void Vertex::move(const Vector3d dif)
 {
-	Matrix4d moveMatrix {
-		{ 1, 0, 0, 0 },
-		{ 0, 1, 0, 0 },
-		{ 0, 0, 1, 0 },
-		{ dif.x(), dif.y(), dif.z(), 1 } };
-
-	transMatrix *= moveMatrix;
+	transMatrix *= moveMatrix(dif);
 }
 
 void Vertex::scale(const Vector3d k)
 {
-	Matrix4d scaleMatrix {
-		{ k.x(), 0,     0,     0 },
-		{ 0,     k.y(), 0,     0 },
-		{ 0,     0,     k.z(), 0 },
-		{ 0,     0,     0,     1 } };
-
-	transMatrix *= scaleMatrix;
+	transMatrix *= scaleMatrix(k);
 }
 
 void Vertex::rotate(const Vector3d angles)
@@ -103,35 +91,17 @@ void Vertex::rotate(const Vector3d angles)
 
 void Vertex::rotateX(const double angle)
 {
-	Matrix4d rotateMatrix {
-		{ 1, 0,          0,           0 },
-		{ 0, cos(angle), -sin(angle), 0 },
-		{ 0, sin(angle),  cos(angle), 0 },
-		{ 0, 0,           0,          1 } };
-
-	transMatrix *= rotateMatrix;
+	transMatrix *= rotateXMatrix(angle);
 }
 
 void Vertex::rotateY(const double angle)
 {
-	Matrix4d rotateMatrix {
-		{ cos(angle),  0, sin(angle), 0 },
-		{ 0,           1, 0,          0 },
-		{ -sin(angle), 0, cos(angle), 0 },
-		{ 0,           0, 0,          1 } };
-
-	transMatrix *= rotateMatrix;
+	transMatrix *= rotateYMatrix(angle);
 }
 
 void Vertex::rotateZ(const double angle)
 {
-	Matrix4d rotateMatrix{
-		{ cos(angle), -sin(angle), 0, 0 },
-		{ sin(angle),  cos(angle), 0, 0 },
-		{ 0,           0,          1, 0 },
-		{ 0,           0,          0, 1 } };
-
-	transMatrix *= rotateMatrix;
+	transMatrix *= rotateZMatrix(angle);
 }
 
 
@@ -139,4 +109,54 @@ void Vertex::rotateZ(const double angle)
 double getDistance2D(Vector2d v1, Vector2d v2)
 {
 	return sqrt((v1.x() - v2.x()) * (v1.x() - v2.x()) + (v1.y() - v2.y()) * (v1.y() - v2.y()));
+}
+
+Matrix4d moveMatrix(const Vector3d dif) {
+	Matrix4d moveMatrix {
+		{ 1, 0, 0, 0 },
+		{ 0, 1, 0, 0 },
+		{ 0, 0, 1, 0 },
+		{ dif.x(), dif.y(), dif.z(), 1 } };
+
+	return moveMatrix;
+}
+
+Matrix4d scaleMatrix(const Vector3d k) {
+	Matrix4d scaleMatrix {
+		{ k.x(), 0,     0,     0 },
+		{ 0,     k.y(), 0,     0 },
+		{ 0,     0,     k.z(), 0 },
+		{ 0,     0,     0,     1 } };
+
+	return scaleMatrix;
+}
+
+Matrix4d rotateXMatrix(const double angle) {
+	Matrix4d rotateMatrix {
+		{ 1, 0,          0,           0 },
+		{ 0, cos(angle), -sin(angle), 0 },
+		{ 0, sin(angle),  cos(angle), 0 },
+		{ 0, 0,           0,          1 } };
+
+	return rotateMatrix;
+}
+
+Matrix4d rotateYMatrix(const double angle) {
+	Matrix4d rotateMatrix {
+		{ cos(angle),  0, sin(angle), 0 },
+		{ 0,           1, 0,          0 },
+		{ -sin(angle), 0, cos(angle), 0 },
+		{ 0,           0, 0,          1 } };
+
+	return rotateMatrix;
+}
+
+Matrix4d rotateZMatrix(const double angle) {
+	Matrix4d rotateMatrix {
+		{ cos(angle), -sin(angle), 0, 0 },
+		{ sin(angle),  cos(angle), 0, 0 },
+		{ 0,           0,          1, 0 },
+		{ 0,           0,          0, 1 } };
+
+	return rotateMatrix;
 }

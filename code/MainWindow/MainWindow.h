@@ -24,6 +24,8 @@ public slots:
     void objectScaleSlot(Vector2i lastPos, Vector2i newPos);
     void objectRotateSlot(Vector2i lastPos, Vector2i newPos);
 
+    void on_projectionButton_clicked();
+
 private:
     void setupScene();
     void renderScene();

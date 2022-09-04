@@ -36,7 +36,8 @@ void PolygonalModelDetails::addFace(std::shared_ptr<Face> face) {
 }
 
 void PolygonalModelDetails::setArithmeticCenter() {
-	this->center.setPosition(findArithmeticCenter());
+	this->center.setPosition(Vector3d(0, 0, 0));
+	this->center.move(findArithmeticCenter());
 }
 
 void PolygonalModelDetails::transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params) {
@@ -54,13 +55,13 @@ Vector3d PolygonalModelDetails::findArithmeticCenter() {
 	{
 		throw EmptyException(EXCEPCION_ARGS, "Vertices is empty");
 	}
-	auto point = vertices[0]->getPosition();
+	auto point = vertices[0]->getTransformPosition();
 	double maxX = point.x(), maxY = point.y(), maxZ = point.z();
 	double minX = point.x(), minY = point.y(), minZ = point.z();
 
 	for (auto& vert : vertices)
 	{
-		point = vert->getPosition();
+		point = vert->getTransformPosition();
 		if (point.x() > maxX) maxX = point.x();
 		if (point.y() > maxY) maxY = point.y();
 		if (point.z() > maxZ) maxZ = point.z();
