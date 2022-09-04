@@ -24,7 +24,7 @@ void Display::mouseReleaseEvent(QMouseEvent* mouse) {
 
     switch (mouse->button()) {
     case(Qt::RightButton):
-        // тут тут тут тут тут
+        // С‚СѓС‚ С‚СѓС‚ С‚СѓС‚ С‚СѓС‚ С‚СѓС‚
         rightButtonClicked = false;
         break;
     }

@@ -71,7 +71,7 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
         if (model) {
             showStatusMessage("Now " + model->getName() + " is scaling");
 
-            Vector3d center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera());
+            Vector3d center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective());
             Vector2d center2d = center.head<2>();
             double dist1 = getDistance2D(center2d, lastPos.cast<double>()), dist2 = getDistance2D(center2d, newPos.cast<double>());
             double k = dist2 / dist1;
