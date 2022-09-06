@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{42A81CB3-05AE-440F-A197-7DD8F895040E}</ProjectGuid>
