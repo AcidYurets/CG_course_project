@@ -1,5 +1,5 @@
 #include "MainWindow.h"
-#include "Exceptions/Exceptions.h"
+#include "../Exceptions/Exceptions.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setupScene();
 
-    QString fileName = "../data/scenes/simpleScene.sol";
+    QString fileName = "../data/scenes/cube.sol";
     this->scene = fileManager.loadScene(fileName.toStdString());
     renderScene();
     //ui->display->resetTransform();
@@ -42,6 +42,7 @@ void MainWindow::openFileSlot() {
 
 void MainWindow::mouseClickSlot(Vector2i pos) {
     try {
+        showStatusMessage("Mouse clocked on " + to_string(pos.x()) + ", " + to_string(pos.y()));
         selectionManager.selectModel(scene, pos);
 
         renderScene();
@@ -70,7 +71,8 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
         if (model) {
             showStatusMessage("Now " + model->getName() + " is scaling");
 
-            Vector3d center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective());
+            Vector3d center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(), 
+                Vector2d(ui->display->geometry().center().x(), ui->display->geometry().center().y()));
             Vector2d center2d = center.head<2>();
             double dist1 = getDistance2D(center2d, lastPos.cast<double>()), dist2 = getDistance2D(center2d, newPos.cast<double>());
             double k = dist2 / dist1;
@@ -100,6 +102,10 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 void MainWindow::on_projectionButton_clicked() {
     renderManager.setPerspective(!renderManager.getPerspective());
 
+    renderScene();
+}
+
+void MainWindow::on_rerenderButton_clicked() {
     renderScene();
 }
 

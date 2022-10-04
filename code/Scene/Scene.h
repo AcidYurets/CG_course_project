@@ -1,7 +1,7 @@
 #pragma once
-#include "Objects/Model/Model.h"
-#include "Objects/LightSource/LightSource.h"
-#include "Objects/Camera/Camera.h"
+#include "../Objects/Model/Model.h"
+#include "../Objects/LightSource/LightSource.h"
+#include "../Objects/Camera/Camera.h"
 
 using Models = std::vector<std::shared_ptr<Model>>;
 using LightSources = std::vector<std::shared_ptr<LightSource>>;

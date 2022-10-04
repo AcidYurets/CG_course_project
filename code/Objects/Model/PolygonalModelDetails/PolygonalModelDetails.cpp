@@ -1,5 +1,5 @@
 #include "PolygonalModelDetails.h"
-#include "Exceptions/Exceptions.h"
+#include "../../../Exceptions/Exceptions.h"
 
 PolygonalModelDetails::PolygonalModelDetails() : vertices(0), edges(0), faces(0), center(0, 0, 0) { }
 

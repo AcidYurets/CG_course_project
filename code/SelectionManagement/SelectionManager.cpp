@@ -1,5 +1,5 @@
 #include "SelectionManager.h"
-#include "Exceptions/Exceptions.h"
+#include "../Exceptions/Exceptions.h"
 
 SelectionManager::SelectionManager() : selectedModel(nullptr), selectedFaces(0), selectedEdges(0), selectedVertices(0) { }
 

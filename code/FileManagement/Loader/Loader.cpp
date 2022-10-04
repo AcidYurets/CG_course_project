@@ -1,5 +1,6 @@
 #include "Loader.h"
-#include "Exceptions/Exceptions.h"
+#include "../../Exceptions/Exceptions.h"
+#include "qrgb.h"
 
 #define MAX_LEN 100
 
@@ -139,6 +140,10 @@ shared_ptr<Scene> Loader::loadScene()
 			}
 
 			shared_ptr<Face> f = make_shared<Face>(faceEdges, vertices);
+			// TODO: Убрать!!!
+			f->setColor(qRgb(rand() % 255, rand() % 255, rand() % 255));
+			f->setColor(qRgb(100, 100, 100));
+
 			details->addFace(f);
 		}
 		else if (key == "ls") { // Считываем источние света

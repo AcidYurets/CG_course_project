@@ -12,8 +12,12 @@ public:
 	Face(Edges edges, Vertices vertices);
 
 	Vertices getVertices();
-	
+	uint getColor();
+	Vector3d getNormal(const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter);
+
+	void setColor(uint color);
 private:
 	Edges edges;
 	Vertices vertices;
+	uint color;
 };

@@ -1,11 +1,11 @@
 #pragma once
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "Scene/Scene.h"
-#include "SelectionManagement/SelectionManager.h"
-#include "TransformManagement/TransformManager.h"
-#include "FileManagement/FileManager.h"
-#include "RenderManagement/RenderManager.h"
+#include "../Scene/Scene.h"
+#include "../SelectionManagement/SelectionManager.h"
+#include "../TransformManagement/TransformManager.h"
+#include "../FileManagement/FileManager.h"
+#include "../RenderManagement/RenderManager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +25,7 @@ public slots:
     void objectRotateSlot(Vector2i lastPos, Vector2i newPos);
 
     void on_projectionButton_clicked();
+    void on_rerenderButton_clicked();
 
 private:
     void setupScene();

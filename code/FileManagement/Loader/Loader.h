@@ -1,7 +1,7 @@
 #pragma once
 #include <fstream>
 #include <sstream>
-#include "Scene/Scene.h"
+#include "../../Scene/Scene.h"
 
 using namespace std;
 

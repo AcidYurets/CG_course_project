@@ -24,7 +24,7 @@ public:
 
 	// Метод находит местоположение вершины на экране с учетом камеры 
 	// и параметров отображения (например, перспективы)
-	Vector3d getScreenPosition(shared_ptr<Camera> camera, bool isPerspective);
+	Vector3d getScreenPosition(shared_ptr<Camera> camera, bool isPerspective, Vector2d screenCenter);
 
 	void move(const Vector3d move_params);
 	void scale(const Vector3d scale_params);

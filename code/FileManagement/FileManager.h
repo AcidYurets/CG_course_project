@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Scene/Scene.h"
+#include "../Scene/Scene.h"
 using namespace std;
 
 class FileManager

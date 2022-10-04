@@ -15,6 +15,19 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="Display" name="display">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="2" rowspan="2">
      <widget class="QFrame" name="rightFrame">
       <property name="frameShape">
@@ -53,6 +66,11 @@
           <property name="text">
            <string>Модели</string>
           </property>
+          <item>
+           <property name="text">
+            <string>Икосфера</string>
+           </property>
+          </item>
          </item>
          <item>
           <property name="text">
@@ -73,6 +91,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
          </property>
          <widget class="QWidget" name="transformationPage">
           <attribute name="title">
@@ -394,6 +415,11 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="addPage">
+          <attribute name="title">
+           <string>Добавление</string>
+          </attribute>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -402,21 +428,21 @@
     <item row="0" column="0" colspan="2">
      <widget class="QWidget" name="buttonsWidget" native="true">
       <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="2">
+       <item row="0" column="3">
         <widget class="QPushButton" name="frameButton">
          <property name="text">
           <string>Каркасное представление</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="0" column="2">
         <widget class="QPushButton" name="projectionButton">
          <property name="text">
           <string>Ортогональная проекция</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
+       <item row="0" column="1">
         <spacer name="buttonsSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -429,20 +455,14 @@
          </property>
         </spacer>
        </item>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="rerenderButton">
+         <property name="text">
+          <string>ReRender</string>
+         </property>
+        </widget>
+       </item>
       </layout>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="Display" name="display">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
-      </property>
      </widget>
     </item>
    </layout>
