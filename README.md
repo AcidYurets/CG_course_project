@@ -1,1 +1,1 @@
-# CG_course_project
+# Редактор 3D моделей
