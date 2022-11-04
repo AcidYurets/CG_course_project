@@ -88,6 +88,12 @@ void Vertex::rotate(const Vector3d angles)
 	rotateZ(angles.z());
 }
 
+void Vertex::transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params) {
+	this->scale(scale_params);
+	this->rotate(rotate_params);
+	this->move(move_params);
+}
+
 void Vertex::rotateX(const double angle)
 {
 	transMatrix *= rotateXMatrix(angle);

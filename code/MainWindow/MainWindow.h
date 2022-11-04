@@ -26,6 +26,7 @@ public slots:
 
     void on_projectionButton_clicked();
     void on_rerenderButton_clicked();
+    void modeChanged(int index);
 
 private:
     void setupScene();
@@ -41,4 +42,5 @@ private:
     FileManager fileManager;
     
     shared_ptr<Scene> scene;
+    Vector2d screenCenter;
 };

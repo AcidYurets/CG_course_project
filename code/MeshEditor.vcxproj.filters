@@ -123,6 +123,9 @@
     <ClInclude Include="TransformManagement\TransformManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Consts\Consts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

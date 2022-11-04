@@ -1,7 +1,7 @@
 #include "Display.h"
 
 Display::Display(QWidget* parent = nullptr) : QOpenGLWidget(parent) {
-    setFocusPolicy(Qt::StrongFocus);
+    //setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true); 
 }
 

@@ -38,6 +38,7 @@
     <QtUic Include="MainWindow\MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Consts\Consts.h" />
     <ClInclude Include="FileManagement\Loader\Loader.h" />
     <ClInclude Include="Objects\Model\PolygonalModelDetails\Face.h" />
     <ClInclude Include="FileManagement\FileManager.h" />

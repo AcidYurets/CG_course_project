@@ -29,6 +29,8 @@ public:
 	void move(const Vector3d move_params);
 	void scale(const Vector3d scale_params);
 	void rotate(const Vector3d rotate_params);
+
+	void transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);
 	
 private:
 	void rotateX(const double angle);

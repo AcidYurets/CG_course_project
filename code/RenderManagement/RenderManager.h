@@ -1,5 +1,6 @@
 #pragma once
 #include "../Scene/Scene.h"
+#include "../Consts/Consts.h"
 #include <QWidget>
 #include <QPainter>
 
@@ -8,9 +9,18 @@ using ScreenFace = std::vector<Vector3d>;
 class RenderManager
 {
 public:
+	// 0 - объектный режим
+	// 1 - режим редактирования граней
+	// 2 - режим редактирования ребер
+	// 3 - режим редактирования вершин
+	int mode = objectMode;
+
 	RenderManager();
 
 	void initImage(shared_ptr<QImage> image);
+
+	shared_ptr<Face> getFaceBufferValue(int x, int y);
+	MatrixX<shared_ptr<Face>> getFaceBuffer();
 
 	bool getPerspective();
 	void setPerspective(bool isPerspective);
@@ -30,7 +40,7 @@ private:
 	void processPixel(Vector3d p, QRgb color = Qt::black);
 	void processPixel(double x, double y, double z, QRgb color = Qt::black);
 	void processLine(Vector3d p1, Vector3d p2, QRgb color = Qt::black);
-	void processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color);
+	void processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color, const shared_ptr<Face>& basicFace);
 
 	bool checkPixel(Vector2d p, double z);
 	bool checkPixel(Vector3d p);
@@ -44,8 +54,12 @@ private:
 	Vector3d calculateBarycentric(const QPoint& p, const ScreenFace& triangle, const double& square);
 	double baryCentricInterpolation(const Vector3d& a, const Vector3d& b, const Vector3d& c, const Vector3d& bary);
 
+	// Обновляет значение в буфере граней
+	void updateFaceBuffer(Vector2d p, double z, shared_ptr<Face> face);
+
 	MatrixX<double> zBuffer;
 	shared_ptr<QImage> frameBuffer;
+	MatrixX<shared_ptr<Face>> faceBuffer;
 
 	bool isPerspective = true;
 };

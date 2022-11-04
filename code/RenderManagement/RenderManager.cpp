@@ -10,6 +10,14 @@ void RenderManager::initImage(shared_ptr<QImage> image) {
 	this->frameBuffer = image;
 }
 
+shared_ptr<Face> RenderManager::getFaceBufferValue(int x, int y) {
+	return faceBuffer(x, y);
+}
+
+MatrixX<shared_ptr<Face>> RenderManager::getFaceBuffer() {
+	return faceBuffer;
+}
+
 bool RenderManager::getPerspective() {
 	return isPerspective;
 }
@@ -58,13 +66,16 @@ void RenderManager::initBuffers(const QRectF& geometry, QRgb background) {
 	QImage image(geometry.width(), geometry.height(), QImage::Format_RGB32);
 	*frameBuffer = image;
 	frameBuffer->fill(background);
+
+	faceBuffer.resize(geometry.width(), geometry.height());
+	faceBuffer.fill(nullptr);
 }
 
 void RenderManager::renderFace(const shared_ptr<Face>& face, const shared_ptr<Scene>& scene, Vector2d screenCenter) {
 	if (face == nullptr)
 		throw EmptyException(EXCEPCION_ARGS, "Face is null");
 
-	// TODO: Тут должна быть проверка, что грань не лицевая
+	// Проверка, что грань не лицевая
 	auto normal = face->getNormal(scene->getCamera(), isPerspective, screenCenter);
 	auto check = normal.dot(Vector3d(0, 0, 1));
 	//qDebug() << "Face x:" << check;
@@ -82,10 +93,7 @@ void RenderManager::renderFace(const shared_ptr<Face>& face, const shared_ptr<Sc
 	auto faceColor = this->calculateFaceColor(face, scene->getCamera(), isPerspective, screenCenter);
 
 	// Обрабатываем все приксели обр. прямоугольника
-	this->processFace(screenFace, framingRect, faceColor);
-
-
-	
+	this->processFace(screenFace, framingRect, faceColor, face);
 }
 
 void RenderManager::processPixel(Vector2d p, double z, QRgb color) {
@@ -140,7 +148,7 @@ void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
 	double curZ = zStart;
 
 	for (int i = 0; i < length; i++) {
-		// TODO: Почему именно 2?
+		// TODO: Почему именно 1?
 		this->processPixel(curX, curY, curZ + 1, color);
 		curX += deltaX;
 		curY += deltaY;
@@ -148,7 +156,7 @@ void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
 	}
 }
 
-void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color) {
+void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color, const shared_ptr<Face>& basicFace) {
 	double square = (face[0].y() - face[2].y()) * (face[1].x() - face[2].x()) +
 		(face[1].y() - face[2].y()) * (face[2].x() - face[0].x());
 
@@ -158,8 +166,9 @@ void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect
 
 			if (barCoords.x() >= -EPS && barCoords.y() >= -EPS && barCoords.z() >= -EPS) {
 				double z = baryCentricInterpolation(face[0], face[1], face[2], barCoords);
-
-				processPixel(x, y, z, color);
+				
+				this->processPixel(x, y, z, color);
+				this->updateFaceBuffer(Vector2d(x, y), z, basicFace);
 			}
 		}
 	}
@@ -198,7 +207,7 @@ QRgb RenderManager::calculateFaceColor(const shared_ptr<Face>& face, const share
 }
 
 QRect RenderManager::calculateFramingRect(const ScreenFace& face) {
-	auto point = face[0];
+	Vector3d point = face[0];
 	double maxX = point.x(), maxY = point.y();
 	double minX = point.x(), minY = point.y();
 
@@ -230,4 +239,12 @@ double RenderManager::baryCentricInterpolation(const Vector3d& a, const Vector3d
 {
 	double z = bary.x() * a.z() + bary.y() * b.z() + bary.z() * c.z();
 	return z;
+}
+
+// Обновляет значение в буфере граней
+void RenderManager::updateFaceBuffer(Vector2d p, double z, shared_ptr<Face> face) {
+	if (this->checkPixel(p, z)) {
+		Vector2i roundedP = p.cast<int>();
+		faceBuffer(roundedP.x(), roundedP.y()) = face;
+	}
 }

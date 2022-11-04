@@ -4,12 +4,28 @@
 class SelectionManager
 {
 public:
+	// Поле, дублирующее значение аналогичного у RenderManager
+	bool isPerspective = true;
+	// Поле, дублирующее значение аналогичного у MainWindow
+	Vector2d screenCenter;
+
 	SelectionManager();
 
+	void setFaceBuffer(MatrixX<shared_ptr<Face>> faceBuffer);
+
 	void selectModel(shared_ptr<Scene>& scene, Vector2i mousePos);
+	void selectFace(shared_ptr<Scene>& scene, Vector2i mousePos);
+	void selectEdge(shared_ptr<Scene>& scene, Vector2i mousePos);
+	void selectVertex(shared_ptr<Scene>& scene, Vector2i mousePos);
+
+	void clearSelecteds();
+
 	shared_ptr<Model> getSelectedModel();
+	Vertices getSelectedVertices();
 
 private:
+	MatrixX<shared_ptr<Face>> faceBuffer;
+
 	shared_ptr<Model> selectedModel = nullptr;
 
 	Faces selectedFaces = Faces(0);
