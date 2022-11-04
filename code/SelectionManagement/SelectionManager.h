@@ -18,9 +18,11 @@ public:
 	void selectEdge(shared_ptr<Scene>& scene, Vector2i mousePos);
 	void selectVertex(shared_ptr<Scene>& scene, Vector2i mousePos);
 
-	void clearSelecteds();
+	void clearSelecteds(shared_ptr<Scene>& scene);
 
 	shared_ptr<Model> getSelectedModel();
+	Faces getSelectedFaces();
+	Edges getSelectedEdges();
 	Vertices getSelectedVertices();
 
 private:

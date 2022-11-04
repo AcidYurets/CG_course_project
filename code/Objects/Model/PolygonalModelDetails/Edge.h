@@ -13,6 +13,8 @@ public:
 
 	Vector2<shared_ptr<Vertex>> getVertices();
 
+	bool selected = false;
+
 private:
 	Vector2<shared_ptr<Vertex>> vertices;
 };

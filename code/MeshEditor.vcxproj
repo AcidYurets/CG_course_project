@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="FileManagement\Loader\Loader.cpp" />
     <ClCompile Include="MainWindow\Display.cpp" />
+    <ClCompile Include="Objects\Line\Line.cpp" />
     <ClCompile Include="Objects\Model\PolygonalModelDetails\Edge.cpp" />
     <ClCompile Include="FileManagement\FileManager.cpp" />
     <ClCompile Include="Objects\LightSource\LightSource.cpp" />
@@ -40,6 +41,7 @@
   <ItemGroup>
     <ClInclude Include="Consts\Consts.h" />
     <ClInclude Include="FileManagement\Loader\Loader.h" />
+    <ClInclude Include="Objects\Line\Line.h" />
     <ClInclude Include="Objects\Model\PolygonalModelDetails\Face.h" />
     <ClInclude Include="FileManagement\FileManager.h" />
     <ClInclude Include="Objects\LightSource\LightSource.h" />

@@ -140,9 +140,7 @@ shared_ptr<Scene> Loader::loadScene()
 			}
 
 			shared_ptr<Face> f = make_shared<Face>(faceEdges, vertices);
-			// TODO: Убрать!!!
-			f->setColor(qRgb(rand() % 255, rand() % 255, rand() % 255));
-			f->setColor(qRgb(100, 100, 100));
+			f->setColor(qRgb(200, 200, 200));
 
 			details->addFace(f);
 		}
@@ -155,10 +153,6 @@ shared_ptr<Scene> Loader::loadScene()
 			if (!(lineStream >> lsName)) throw FileFormatException(EXCEPCION_ARGS, "Invalid file format: can't read ls name");
 			Vertex v = Vertex(readPosition(lineStream));
 			ls = make_shared<LightSource>(v, lsName);
-		}
-		else if (key == "cam") { // Считываем источние света
-			Vertex v = Vertex(readPosition(lineStream));
-			camera = make_shared<Camera>(v);
 		}
 	}
 
@@ -173,6 +167,9 @@ shared_ptr<Scene> Loader::loadScene()
 	shared_ptr<Scene> scene = make_shared<Scene>();
 	scene->setModels(models);
 	scene->setLightSources(lightSources);
+	if (camera == nullptr) {
+		camera = make_shared<Camera>(Vector3d(0, 0, -10));
+	}
 	scene->setCamera(camera);
 
 	return scene;

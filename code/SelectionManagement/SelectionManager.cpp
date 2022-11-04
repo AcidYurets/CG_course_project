@@ -15,6 +15,7 @@ void SelectionManager::selectModel(shared_ptr<Scene> &scene, Vector2i mousePos) 
 
 	// TODO: Реализовать нормальный выбор модели
     selectedModel = scene->getModels()[0];
+	scene->getModels()[0]->selected = true;
 	// scene->setSelectedItems(...)
 }
 
@@ -44,16 +45,39 @@ void SelectionManager::selectVertex(shared_ptr<Scene>& scene, Vector2i mousePos)
 	}
 
 	selectedVertices.push_back(chosenVertex);
+	chosenVertex->selected = true;
 }
 
-void SelectionManager::clearSelecteds() {
+void SelectionManager::clearSelecteds(shared_ptr<Scene>& scene) {
 	selectedVertices.clear();
 	selectedEdges.clear();
 	selectedFaces.clear();
+
+	for (auto& m : scene->getModels()) {
+		m->selected = false;
+		auto d = m->getDetails();
+		for (auto& f : d->getFaces()) {
+			f->selected = false;
+		}
+		for (auto& e : d->getEdges()) {
+			e->selected = false;
+		}
+		for (auto& v : d->getVertices()) {
+			v->selected = false;
+		}
+	}
 }
 
 shared_ptr<Model> SelectionManager::getSelectedModel() {
 	return selectedModel;
+}
+
+Faces SelectionManager::getSelectedFaces() {
+	return selectedFaces;
+}
+
+Edges SelectionManager::getSelectedEdges() {
+	return selectedEdges;
 }
 
 Vertices SelectionManager::getSelectedVertices() {

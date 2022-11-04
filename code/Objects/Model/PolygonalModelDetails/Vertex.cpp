@@ -5,7 +5,7 @@ Vertex::Vertex() : position(0, 0, 0), transMatrix(Matrix4d::Identity()) {
 	// Масштабируем и перемещаем в центр экрана
 	// this->scale(Vector3d(100, 100, 100));
 	// TODO: Найти центр исходя из размера окна
-	this->move(Vector3d(370, 280, 0));
+	// this->move(Vector3d(370, 280, 0));
 	
 }
 
@@ -22,6 +22,10 @@ Vertex::Vertex(double x, double y, double z) : Vertex(Vector3d(x, y, z)) { }
 void Vertex::setPosition(Vector3d pos) {
 	position = pos;
 	transMatrix = Matrix4d::Identity();
+}
+
+Matrix4d Vertex::getTransMatrix() {
+	return transMatrix;
 }
 
 Vector3d Vertex::getTransformPosition() {
@@ -44,6 +48,7 @@ Vector3d Vertex::getScreenPosition(shared_ptr<Camera> camera, bool isPerspective
 		{ 0, 1, 0, 0 },
 		{ 0, 0, 1, 0 },
 		{ 0, 0, 0, 1 } };
+	cameraTransMatrix *= camera->getTransMatrix();
 
 	Matrix4d finalTransMatrix;
 	if (isPerspective) {
@@ -53,7 +58,7 @@ Vector3d Vertex::getScreenPosition(shared_ptr<Camera> camera, bool isPerspective
 		{ 0, 0, 1, -0.001 },
 		{ 0, 0, 0, 1 } };
 
-		// TODO: Найти центр исходя из размера окна
+		// Находим центр исходя из размера окна
 		Vector3d center(screenCenter.x(), screenCenter.y(), 0);
 
 		finalTransMatrix = transMatrix * cameraTransMatrix

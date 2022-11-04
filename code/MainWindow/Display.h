@@ -17,6 +17,7 @@ public:
     void mousePressEvent(QMouseEvent* mouse);
     void mouseReleaseEvent(QMouseEvent* mouse);
     void mouseMoveEvent(QMouseEvent* mouse);
+    void wheelEvent(QWheelEvent* event);
 
     void keyPressEvent(QKeyEvent* mouse);
     void keyReleaseEvent(QKeyEvent* mouse);
@@ -28,6 +29,10 @@ signals:
     void objectScaleSignal(Vector2i lastPos, Vector2i newPos);
     void objectRotateSignal(Vector2i lastPos, Vector2i newPos);
 
+    void cameraMoveSignal(Vector2i lastPos, Vector2i newPos);
+    void cameraRotateSignal(Vector2i lastPos, Vector2i newPos);
+    void cameraZoomSignal(int param);
+
 protected:
     void paintGL();
 
@@ -37,6 +42,7 @@ private:
     bool keySClicked = false;
     bool keyRClicked = false;
     bool rightButtonClicked = false;
+    bool middleButtonClicked = false;
 
 
     shared_ptr<QImage> image;

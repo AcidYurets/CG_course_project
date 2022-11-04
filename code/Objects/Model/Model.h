@@ -13,6 +13,8 @@ public:
 
 	virtual void transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);
 
+	bool selected = false;
+
 private:
 	shared_ptr<PolygonalModelDetails> details;
 	string name;

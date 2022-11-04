@@ -23,6 +23,8 @@ public slots:
     void objectMoveSlot(Vector2i lastPos, Vector2i newPos);
     void objectScaleSlot(Vector2i lastPos, Vector2i newPos);
     void objectRotateSlot(Vector2i lastPos, Vector2i newPos);
+    void cameraMoveSlot(Vector2i lastPos, Vector2i newPos);
+    void cameraRotateSlot(Vector2i lastPos, Vector2i newPos);
 
     void on_projectionButton_clicked();
     void on_rerenderButton_clicked();

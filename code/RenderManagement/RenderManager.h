@@ -1,6 +1,7 @@
 #pragma once
 #include "../Scene/Scene.h"
 #include "../Consts/Consts.h"
+#include "../Objects/Line/Line.h"
 #include <QWidget>
 #include <QPainter>
 

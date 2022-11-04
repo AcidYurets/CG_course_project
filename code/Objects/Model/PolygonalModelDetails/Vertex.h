@@ -19,6 +19,8 @@ public:
 	// Vector3d getPosition();
 	void setPosition(Vector3d pos);
 
+	Matrix4d getTransMatrix();
+
 	// Метод находит реальное местоположение вершины без учета местоположения камеры
 	Vector3d getTransformPosition();
 
@@ -31,6 +33,8 @@ public:
 	void rotate(const Vector3d rotate_params);
 
 	void transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);
+
+	bool selected = false;
 	
 private:
 	void rotateX(const double angle);

@@ -16,6 +16,9 @@ public:
 	Vector3d getNormal(const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter);
 
 	void setColor(uint color);
+
+	bool selected = false;
+
 private:
 	Edges edges;
 	Vertices vertices;

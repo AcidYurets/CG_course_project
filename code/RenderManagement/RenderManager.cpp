@@ -32,6 +32,18 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 	}
 
 	this->initBuffers(geometry);
+	QPainter qPainter = QPainter(frameBuffer.get());
+
+	// Сначала рисуем оси координат
+	auto xLine = Line(Vertex(-10, 0, 0), Vertex(10, 0, 0));
+	this->processLine(xLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+		xLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::red).rgba());
+	auto yLine = Line(Vertex(0, -10, 0), Vertex(0, 10, 0));
+	this->processLine(yLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+		yLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::green).rgba());
+	auto zLine = Line(Vertex(0, 0, -10), Vertex(0, 0, 10));
+	this->processLine(zLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+		zLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::blue).rgba());
 
 	for (auto& model : scene->getModels()) {
 		// Отображаем грани
@@ -49,10 +61,17 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 		for (auto& vertex : model->getDetails()->getVertices()) {
 			auto screenPos = vertex->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y()));
 			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 2)) {
-				QPainter qPainter = QPainter(frameBuffer.get());
-				qPainter.setBrush(QBrush(Qt::black));
-				qPainter.setPen(Qt::black);
-				qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), 2, 2);
+				auto pen = QPen(Qt::black);
+				auto brush = QBrush(Qt::black);
+				int r = 2;
+				if (vertex->selected) {
+					brush = QBrush(Qt::cyan);
+					r = 3;
+				}
+
+				qPainter.setBrush(brush);
+				qPainter.setPen(pen);
+				qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), r, r);
 			}
 		}
 	}
