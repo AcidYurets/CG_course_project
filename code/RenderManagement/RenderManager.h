@@ -22,6 +22,8 @@ public:
 
 	shared_ptr<Face> getFaceBufferValue(int x, int y);
 	MatrixX<shared_ptr<Face>> getFaceBuffer();
+	shared_ptr<Model> getModelBufferValue(int x, int y);
+	MatrixX<shared_ptr<Model>> getModelBuffer();
 
 	bool getPerspective();
 	void setPerspective(bool isPerspective);
@@ -34,14 +36,14 @@ private:
 	void initBuffers(const QRectF& geometry, QRgb background = qRgb(180, 180, 180));
 
 	// Renders
-	void renderFace(const shared_ptr<Face>& face, const shared_ptr<Scene>& scene, Vector2d screenCenter);
+	void renderFace(const shared_ptr<Face>& face, const shared_ptr<Scene>& scene, Vector2d screenCenter, const shared_ptr<Model>& model);
 	
 	// Processes
 	void processPixel(Vector2d p, double z, QRgb color = Qt::black);
 	void processPixel(Vector3d p, QRgb color = Qt::black);
 	void processPixel(double x, double y, double z, QRgb color = Qt::black);
 	void processLine(Vector3d p1, Vector3d p2, QRgb color = Qt::black);
-	void processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color, const shared_ptr<Face>& basicFace);
+	void processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color, const shared_ptr<Face>& basicFace, const shared_ptr<Model>& model);
 
 	bool checkPixel(Vector2d p, double z);
 	bool checkPixel(Vector3d p);
@@ -57,10 +59,15 @@ private:
 
 	// Обновляет значение в буфере граней
 	void updateFaceBuffer(Vector2d p, double z, shared_ptr<Face> face);
+	// Обновляет значение в буфере моделей
+	void updateModelBuffer(Vector2d p, double z, shared_ptr<Model> model);
+
+	void colorSelectedVertex(QPainter& qPainter, Vector3d point);
 
 	MatrixX<double> zBuffer;
 	shared_ptr<QImage> frameBuffer;
 	MatrixX<shared_ptr<Face>> faceBuffer;
+	MatrixX<shared_ptr<Model>> modelBuffer;
 
 	bool isPerspective = true;
 };

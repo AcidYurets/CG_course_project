@@ -14,8 +14,16 @@ shared_ptr<Face> RenderManager::getFaceBufferValue(int x, int y) {
 	return faceBuffer(x, y);
 }
 
+shared_ptr<Model> RenderManager::getModelBufferValue(int x, int y) {
+	return modelBuffer(x, y);
+}
+
 MatrixX<shared_ptr<Face>> RenderManager::getFaceBuffer() {
 	return faceBuffer;
+}
+
+MatrixX<shared_ptr<Model>> RenderManager::getModelBuffer() {
+	return modelBuffer;
 }
 
 bool RenderManager::getPerspective() {
@@ -48,30 +56,49 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 	for (auto& model : scene->getModels()) {
 		// Отображаем грани
 		for (auto& face : model->getDetails()->getFaces()) {
-			renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()));
+			if (face->selected) {
+				auto prevColor = face->getColor();
+				face->setColor(QColor(Qt::cyan).rgba());
+				renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()), model);
+				face->setColor(prevColor);
+			}
+			else {
+				renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()), model);
+			}
+			
 		}
 
 		// Отображаем ребра
 		for (auto& edge : model->getDetails()->getEdges()) {
-			this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
-				edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())));
+			if (edge->selected) {
+				// Выделяем ребра
+				this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+					edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::cyan).rgba());
+			}
+			else {
+				this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+					edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())));
+			}
+
 		}
 
 		// Отображаем вершины
 		for (auto& vertex : model->getDetails()->getVertices()) {
 			auto screenPos = vertex->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y()));
 			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 2)) {
-				auto pen = QPen(Qt::black);
-				auto brush = QBrush(Qt::black);
-				int r = 2;
 				if (vertex->selected) {
-					brush = QBrush(Qt::cyan);
-					r = 3;
+					// Выделяем вершины
+					this->colorSelectedVertex(qPainter, screenPos);
 				}
+				else {
+					auto pen = QPen(Qt::black);
+					auto brush = QBrush(Qt::black);
+					int r = 2;
 
-				qPainter.setBrush(brush);
-				qPainter.setPen(pen);
-				qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), r, r);
+					qPainter.setBrush(brush);
+					qPainter.setPen(pen);
+					qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), r, r);
+				}
 			}
 		}
 	}
@@ -88,9 +115,11 @@ void RenderManager::initBuffers(const QRectF& geometry, QRgb background) {
 
 	faceBuffer.resize(geometry.width(), geometry.height());
 	faceBuffer.fill(nullptr);
+	modelBuffer.resize(geometry.width(), geometry.height());
+	modelBuffer.fill(nullptr);
 }
 
-void RenderManager::renderFace(const shared_ptr<Face>& face, const shared_ptr<Scene>& scene, Vector2d screenCenter) {
+void RenderManager::renderFace(const shared_ptr<Face>& face, const shared_ptr<Scene>& scene, Vector2d screenCenter, const shared_ptr<Model>& model) {
 	if (face == nullptr)
 		throw EmptyException(EXCEPCION_ARGS, "Face is null");
 
@@ -112,7 +141,7 @@ void RenderManager::renderFace(const shared_ptr<Face>& face, const shared_ptr<Sc
 	auto faceColor = this->calculateFaceColor(face, scene->getCamera(), isPerspective, screenCenter);
 
 	// Обрабатываем все приксели обр. прямоугольника
-	this->processFace(screenFace, framingRect, faceColor, face);
+	this->processFace(screenFace, framingRect, faceColor, face, model);
 }
 
 void RenderManager::processPixel(Vector2d p, double z, QRgb color) {
@@ -175,7 +204,7 @@ void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
 	}
 }
 
-void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color, const shared_ptr<Face>& basicFace) {
+void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color, const shared_ptr<Face>& basicFace, const shared_ptr<Model>& model) {
 	double square = (face[0].y() - face[2].y()) * (face[1].x() - face[2].x()) +
 		(face[1].y() - face[2].y()) * (face[2].x() - face[0].x());
 
@@ -188,6 +217,7 @@ void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect
 				
 				this->processPixel(x, y, z, color);
 				this->updateFaceBuffer(Vector2d(x, y), z, basicFace);
+				this->updateModelBuffer(Vector2d(x, y), z, model);
 			}
 		}
 	}
@@ -266,4 +296,22 @@ void RenderManager::updateFaceBuffer(Vector2d p, double z, shared_ptr<Face> face
 		Vector2i roundedP = p.cast<int>();
 		faceBuffer(roundedP.x(), roundedP.y()) = face;
 	}
+}
+
+// Обновляет значение в буфере моделей
+void RenderManager::updateModelBuffer(Vector2d p, double z, shared_ptr<Model> model) {
+	if (this->checkPixel(p, z)) {
+		Vector2i roundedP = p.cast<int>();
+		modelBuffer(roundedP.x(), roundedP.y()) = model;
+	}
+}
+
+void RenderManager::colorSelectedVertex(QPainter &qPainter, Vector3d point) {
+	auto pen = QPen(Qt::black);
+	auto brush = QBrush(Qt::cyan);
+	int r = 3;
+
+	qPainter.setBrush(brush);
+	qPainter.setPen(pen);
+	qPainter.drawEllipse(QPointF(point.x(), point.y()), r, r);
 }

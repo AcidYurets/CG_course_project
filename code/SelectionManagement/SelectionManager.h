@@ -12,6 +12,7 @@ public:
 	SelectionManager();
 
 	void setFaceBuffer(MatrixX<shared_ptr<Face>> faceBuffer);
+	void setModelBuffer(MatrixX<shared_ptr<Model>> modelBuffer);
 
 	void selectModel(shared_ptr<Scene>& scene, Vector2i mousePos);
 	void selectFace(shared_ptr<Scene>& scene, Vector2i mousePos);
@@ -27,6 +28,7 @@ public:
 
 private:
 	MatrixX<shared_ptr<Face>> faceBuffer;
+	MatrixX<shared_ptr<Model>> modelBuffer;
 
 	shared_ptr<Model> selectedModel = nullptr;
 

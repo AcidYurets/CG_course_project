@@ -46,6 +46,7 @@ private:
 };
 
 double getDistance2D(Vector2d v1, Vector2d v2);
+double getDistToLine2D(Vector2d p, Vector2d p1, Vector2d p2);
 
 Matrix4d moveMatrix(const Vector3d dif);
 Matrix4d scaleMatrix(const Vector3d k);

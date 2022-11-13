@@ -12,6 +12,8 @@ public:
 	Face(Edges edges, Vertices vertices);
 
 	Vertices getVertices();
+	Edges getEdges();
+
 	uint getColor();
 	Vector3d getNormal(const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter);
 

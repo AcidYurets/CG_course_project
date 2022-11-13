@@ -121,6 +121,15 @@ double getDistance2D(Vector2d v1, Vector2d v2)
 	return sqrt((v1.x() - v2.x()) * (v1.x() - v2.x()) + (v1.y() - v2.y()) * (v1.y() - v2.y()));
 }
 
+double getDistToLine2D(Vector2d p, Vector2d p1, Vector2d p2) {
+
+	double a = (p2.y() - p1.y());
+	double b = (p1.x() - p2.x());
+	double c = (p2.x() * p1.y() - p1.x() * p2.y());
+
+	return (abs(a * p.x() + b * p.y() + c) / sqrt(a * a + b * b));
+}
+
 Matrix4d moveMatrix(const Vector3d dif) {
 	Matrix4d moveMatrix {
 		{ 1, 0, 0, 0 },

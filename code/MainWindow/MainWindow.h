@@ -17,6 +17,11 @@ public:
 
 public slots:
     void openFileSlot();
+    void loadSlot();
+    void addCube();
+    void addSphere();
+    void addPiramid();
+    void addThor();
 
     void mouseClickSlot(Vector2i pos);
 
@@ -34,6 +39,7 @@ private:
     void setupScene();
     void renderScene();
     void resizeEvent(QResizeEvent* event);
+    void renewObjectList();
 
     void showStatusMessage(string message);
 

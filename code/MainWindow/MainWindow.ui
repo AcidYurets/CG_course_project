@@ -93,7 +93,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="transformationPage">
           <attribute name="title">
@@ -419,6 +419,49 @@
           <attribute name="title">
            <string>Добавление</string>
           </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QPushButton" name="addCube">
+             <property name="text">
+              <string>Добавить куб</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addSphere">
+             <property name="text">
+              <string>Добавить икосферу</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addPiramid">
+             <property name="text">
+              <string>Добавить пирамиду</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addThor">
+             <property name="text">
+              <string>Добавить тор</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </widget>
         </widget>
        </item>
@@ -431,7 +474,7 @@
        <item row="0" column="3">
         <widget class="QPushButton" name="projectionButton">
          <property name="text">
-          <string>Ортогональная проекция</string>
+          <string>Поменять проецирование</string>
          </property>
         </widget>
        </item>

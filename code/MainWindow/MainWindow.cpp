@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 	QString fileName = "../data/scenes/cube.sol";
 	this->scene = fileManager.loadScene(fileName.toStdString());
+	renewObjectList();
+
 	renderScene();
 	transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y(), 0), Vector3d(0, 0, 0));
 
@@ -16,6 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 	connect(this->ui->open, &QAction::triggered, this, &MainWindow::openFileSlot);
+	connect(this->ui->loadModels, &QAction::triggered, this, &MainWindow::loadSlot);
+	connect(this->ui->addCube, &QPushButton::clicked, this, &MainWindow::addCube);
+	connect(this->ui->addSphere, &QPushButton::clicked, this, &MainWindow::addSphere);
+	connect(this->ui->addPiramid, &QPushButton::clicked, this, &MainWindow::addPiramid);
+	connect(this->ui->addThor, &QPushButton::clicked, this, &MainWindow::addThor);
+
 	connect(this->ui->modeBox, &QComboBox::currentIndexChanged, this, &MainWindow::modeChanged);
 
 	connect(this->ui->display, &Display::mouseClickSignal, this, &MainWindow::mouseClickSlot);
@@ -35,11 +43,69 @@ void MainWindow::openFileSlot() {
    QString fileName = QFileDialog::getOpenFileName(this,
 	   tr("Открыть файл"), "../data/scenes", tr("*.sol"));
 
-	//QString fileName = "../data/scenes/simpleScene.sol";
-	
 	try {
 		this->scene = fileManager.loadScene(fileName.toStdString());
+		renewObjectList();
+
 		transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y(), 0), Vector3d(0, 0, 0));
+
+		renderScene();
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
+void MainWindow::loadSlot() {
+	QString fileName = QFileDialog::getOpenFileName(this,
+		tr("Загрузить модель"), "../data/objects", tr("*.obj"));
+
+	try {
+		Models loadedModels = fileManager.loadModels(fileName.toStdString());
+		this->scene->getModels().insert(this->scene->getModels().end(), loadedModels.begin(), loadedModels.end());
+		renewObjectList();
+
+		renderScene();
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
+void MainWindow::addCube() {
+	try {
+		Models loadedModels = fileManager.loadModels("../data/objects/cube.obj");
+		this->scene->getModels().insert(this->scene->getModels().end(), loadedModels.begin(), loadedModels.end());
+		renewObjectList();
+
+		renderScene();
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
+void MainWindow::addSphere() {
+	try {
+		Models loadedModels = fileManager.loadModels("../data/objects/icosphere.obj");
+		this->scene->getModels().insert(this->scene->getModels().end(), loadedModels.begin(), loadedModels.end());
+		renewObjectList();
+
+		renderScene();
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
+void MainWindow::addPiramid() {
+	try {
+		Models loadedModels = fileManager.loadModels("../data/objects/tetrahedron.obj");
+		this->scene->getModels().insert(this->scene->getModels().end(), loadedModels.begin(), loadedModels.end());
+		renewObjectList();
+
+		renderScene();
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
+void MainWindow::addThor() {
+	try {
+		Models loadedModels = fileManager.loadModels("../data/objects/thor.obj");
+		this->scene->getModels().insert(this->scene->getModels().end(), loadedModels.begin(), loadedModels.end());
+		renewObjectList();
 
 		renderScene();
 	}
@@ -75,15 +141,18 @@ void MainWindow::mouseClickSlot(Vector2i pos) {
 
 void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
 	try {
+		Vector4d moveParams4((newPos.x() - lastPos.x()), (newPos.y() - lastPos.y()), 0, 1);
+		Vector4d globalMoveParams4 = scene->getCamera()->getTransMatrix() * moveParams4;
+		Vector3d globalMoveParams;
+		globalMoveParams << globalMoveParams4.x(), globalMoveParams4.y(), globalMoveParams4.z();
+
 		switch (renderManager.mode) {
 		case objectMode: {
 				shared_ptr<Model> model = selectionManager.getSelectedModel();
 				if (model) {
 					showStatusMessage("Now " + model->getName() + " is moving");
 
-					// TODO: Еще надо будет тут учитывать местополоение камеры
-					Vector3d move_params(newPos.x() - lastPos.x(), newPos.y() - lastPos.y(), 0);
-					transformManager.transformModel(model, move_params, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
+					transformManager.transformModel(model, globalMoveParams, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
 					renderScene();
 				}
 			}
@@ -92,14 +161,7 @@ void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
 		case vertexMode: {
 				Vertices vertices = selectionManager.getSelectedVertices();
 				for (auto& v : vertices) {
-					// TODO: Еще надо будет тут учитывать местополоение камеры
-					Vector2d vert2d = v->getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
-						screenCenter).head<2>();
-					double dist1 = getDistance2D(vert2d, lastPos.cast<double>()), dist2 = getDistance2D(vert2d, newPos.cast<double>());
-					double k =  10 - (dist2 / dist1) * 10;
-
-					Vector3d move_params(0, 0, k);
-					transformManager.transformVertex(v, move_params, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
+					transformManager.transformVertex(v, globalMoveParams, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
 					renderScene();
 				}
 			}
@@ -198,6 +260,7 @@ void MainWindow::renderScene() {
 		renderManager.renderScene(scene, ui->display->geometry());
 
 		selectionManager.setFaceBuffer(renderManager.getFaceBuffer());
+		selectionManager.setModelBuffer(renderManager.getModelBuffer());
 		this->screenCenter = Vector2d(ui->display->geometry().center().x(), ui->display->geometry().center().y());
 		selectionManager.screenCenter = this->screenCenter;
 
@@ -208,6 +271,23 @@ void MainWindow::renderScene() {
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
 	renderScene();
+}
+
+void MainWindow::renewObjectList() {
+	try {
+		if (!scene) throw EmptyException(EXCEPCION_ARGS, "Scene is null");
+		auto modelsTree = ui->objectsWidget->findItems(tr("Модели"), Qt::MatchExactly)[0];
+
+		auto &models = scene->getModels();
+		auto modelsChildern = modelsTree->takeChildren();
+		modelsChildern.clear();
+		for (size_t i = 0; i < models.size(); i++) {
+			modelsChildern.append(new QTreeWidgetItem(modelsTree, QStringList(QString(models[i]->getName().c_str()))));
+		}
+		modelsTree->addChildren(modelsChildern);
+		ui->objectsWidget->addTopLevelItem(modelsTree);
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }
 
 

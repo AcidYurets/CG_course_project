@@ -49,7 +49,7 @@ Models Loader::loadModels() {
 			}
 
 			if (!(lineStream >> name)) throw FileFormatException(EXCEPCION_ARGS, "Invalid file format: can't read model name");
-			shared_ptr<PolygonalModelDetails> details = make_shared<PolygonalModelDetails>();
+			details = make_shared<PolygonalModelDetails>();
 		}
 		else if (key == "v") {
 			if (!details) throw FileFormatException(EXCEPCION_ARGS, "Invalid file format: details is nullptr");
@@ -70,6 +70,8 @@ Models Loader::loadModels() {
 			}
 
 			shared_ptr<Face> f = make_shared<Face>(Edges(), vertices);
+			f->setColor(qRgb(200, 200, 200));
+
 			details->addFace(f);
 		}
 	}
