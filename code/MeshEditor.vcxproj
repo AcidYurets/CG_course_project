@@ -39,6 +39,7 @@
     <QtUic Include="MainWindow\MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Consts\Consts.h" />
     <ClInclude Include="FileManagement\Loader\Loader.h" />
     <ClInclude Include="Objects\Line\Line.h" />
@@ -71,6 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
+    <VCToolsVersion>14.30.30705</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

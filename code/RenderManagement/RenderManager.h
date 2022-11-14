@@ -4,8 +4,19 @@
 #include "../Objects/Line/Line.h"
 #include <QWidget>
 #include <QPainter>
+#include <thread>
 
 using ScreenFace = std::vector<Vector3d>;
+
+struct ThreadParams {
+	int x;
+	int y;
+	const ScreenFace& face;
+	double square;
+	const QRgb& color;
+	const shared_ptr<Face>& basicFace;
+	const shared_ptr<Model>& model;
+};
 
 class RenderManager
 {
@@ -44,6 +55,7 @@ private:
 	void processPixel(double x, double y, double z, QRgb color = Qt::black);
 	void processLine(Vector3d p1, Vector3d p2, QRgb color = Qt::black);
 	void processFace(const ScreenFace& face, const QRect& framingRect, const QRgb& color, const shared_ptr<Face>& basicFace, const shared_ptr<Model>& model);
+	void processFramingRectPixel(unique_ptr<ThreadParams> params);
 
 	bool checkPixel(Vector2d p, double z);
 	bool checkPixel(Vector3d p);

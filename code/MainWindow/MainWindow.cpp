@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "../Exceptions/Exceptions.h"
+#include "../Config.h"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent) {
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(this->ui->addThor, &QPushButton::clicked, this, &MainWindow::addThor);
 
 	connect(this->ui->modeBox, &QComboBox::currentIndexChanged, this, &MainWindow::modeChanged);
+	connect(this->ui->parallelBox, &QCheckBox::stateChanged, this, &MainWindow::parallelChanged);
 
 	connect(this->ui->display, &Display::mouseClickSignal, this, &MainWindow::mouseClickSlot);
 
@@ -158,12 +160,21 @@ void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
 			}
 			break;
 
+		case faceMode: {
+				Faces faces = selectionManager.getSelectedFaces();
+				for (auto& f : faces) {
+					transformManager.transformFace(f, globalMoveParams, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
+				}
+				renderScene();
+			}
+			break;
+
 		case vertexMode: {
 				Vertices vertices = selectionManager.getSelectedVertices();
 				for (auto& v : vertices) {
 					transformManager.transformVertex(v, globalMoveParams, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
-					renderScene();
 				}
+				renderScene();
 			}
 			break;
 		}
@@ -173,18 +184,47 @@ void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
 
 void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
 	try {
-		shared_ptr<Model> model = selectionManager.getSelectedModel();
-		if (model) {
-			showStatusMessage("Now " + model->getName() + " is scaling");
+		// Определяем центр вращения
+		Vector3d center;
+		switch (renderManager.mode) {
+			case objectMode: {
+				shared_ptr<Model> model = selectionManager.getSelectedModel();
+				center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
+					screenCenter);
+			}
+			break;
+			case faceMode: {
+				Faces faces = selectionManager.getSelectedFaces();
+				center = faces[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
+					screenCenter);
+			}
+			break;
+		}
 
-			Vector3d center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(), 
-				screenCenter);
-			Vector2d center2d = center.head<2>();
-			double dist1 = getDistance2D(center2d, lastPos.cast<double>()), dist2 = getDistance2D(center2d, newPos.cast<double>());
-			double k = dist2 / dist1;
-			Vector3d scale_params(k, k, k);
-			transformManager.transformModel(model, Vector3d(0, 0, 0), scale_params, Vector3d(0, 0, 0));
-			renderScene();
+		Vector2d center2d = center.head<2>();
+		double dist1 = getDistance2D(center2d, lastPos.cast<double>()), dist2 = getDistance2D(center2d, newPos.cast<double>());
+		double k = dist2 / dist1;
+		Vector3d scaleParams(k, k, k);
+
+		switch (renderManager.mode) {
+			case objectMode: {
+				shared_ptr<Model> model = selectionManager.getSelectedModel();
+				if (model) {
+					showStatusMessage("Now " + model->getName() + " is scaling");
+
+					transformManager.transformModel(model, Vector3d(0, 0, 0), scaleParams, Vector3d(0, 0, 0));
+					renderScene();
+				}
+			}
+			break;
+			case faceMode: {
+				Faces faces = selectionManager.getSelectedFaces();
+				for (auto& f : faces) {
+					transformManager.transformFace(f, Vector3d(0, 0, 0), scaleParams, Vector3d(0, 0, 0));
+				}
+				renderScene();
+			}
+			break;
 		}
 	}
 	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
@@ -192,15 +232,58 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
 
 void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 	try {
-		shared_ptr<Model> model = selectionManager.getSelectedModel();
-		if (model) {
-			showStatusMessage("Now " + model->getName() + " is rotating");
+		// Определяем центр вращения
+		Vector3d center;
+		switch (renderManager.mode) {
+			case objectMode: {
+				shared_ptr<Model> model = selectionManager.getSelectedModel();
+				center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
+					screenCenter);
+			}
+			break;
+			case faceMode: {
+				Faces faces = selectionManager.getSelectedFaces();
+				center = faces[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
+					screenCenter);
+			}
+			break;
+		}
+		
 
-			// TODO: Сделать поворот относительно всех осей
-			// Vector2d center = model->getDetails()->getCenter().getScreenPosition();
-			Vector3d rotate_params((lastPos.y() - newPos.y())*0.01, -(lastPos.x() - newPos.x())*0.01, 0); // TODO: Сделать нормальный поворот
-			transformManager.transformModel(model, Vector3d(0, 0, 0), Vector3d(1, 1, 1), rotate_params);
-			renderScene();
+		double a1 = atan((lastPos.y() - center.y()) / double((lastPos.x() - center.x())));
+		double a2 = atan((newPos.y() - center.y()) / double((newPos.x() - center.x())));
+		double res = a1 - a2;
+		if (res < -M_PI / 2) {
+			res += M_PI;
+		}
+		else if (res > M_PI / 2) {
+			res -= M_PI;
+		}
+
+		Vector4d rotateParams4(0, 0, res, 1);
+		Vector4d globalRotateParams4 = scene->getCamera()->getTransMatrix() * rotateParams4;
+		Vector3d globalRotateParams;
+		globalRotateParams << globalRotateParams4.x(), globalRotateParams4.y(), globalRotateParams4.z();
+
+		switch (renderManager.mode) {
+			case objectMode: {
+				shared_ptr<Model> model = selectionManager.getSelectedModel();
+				if (model) {
+					showStatusMessage("Now " + model->getName() + " is rotating");
+
+					transformManager.transformModel(model, Vector3d(0, 0, 0), Vector3d(1, 1, 1), globalRotateParams);
+					renderScene();
+				}
+			}
+			break;
+			case faceMode: {
+				Faces faces = selectionManager.getSelectedFaces();
+				for (auto& f : faces) {
+					transformManager.transformFace(f, Vector3d(0, 0, 0), Vector3d(1, 1, 1), globalRotateParams);
+				}
+				renderScene();
+			}
+			break;
 		}
 	}
 	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
@@ -241,6 +324,13 @@ void MainWindow::on_rerenderButton_clicked() {
 
 void MainWindow::modeChanged(int index) {
 	renderManager.mode = ui->modeBox->currentIndex();
+}
+
+void MainWindow::parallelChanged(int state) {
+	if (state == Qt::Checked)
+		config.isParallel = true;
+	else if (state == Qt::Unchecked)
+		config.isParallel = false;
 }
 
 void MainWindow::setupScene() {

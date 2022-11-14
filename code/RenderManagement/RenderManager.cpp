@@ -1,5 +1,9 @@
 #include "RenderManager.h"
 #include "../Exceptions/Exceptions.h"
+#include "../Config.h"
+#include <chrono>
+#include <fstream>
+using namespace std::chrono;
 
 #define MAX_DEPTH INT_MIN
 #define EPS 1e-5
@@ -38,6 +42,7 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 	if (!scene) {
 		return;
 	}
+	//qDebug() << "Рендерим сцену";
 
 	this->initBuffers(geometry);
 	QPainter qPainter = QPainter(frameBuffer.get());
@@ -62,16 +67,20 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 				renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()), model);
 				face->setColor(prevColor);
 			}
+			else if (model->selected) {
+				auto prevColor = face->getColor();
+				face->setColor(QColor(Qt::yellow).rgba());
+				renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()), model);
+				face->setColor(prevColor);
+			}
 			else {
 				renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()), model);
 			}
-			
 		}
 
 		// Отображаем ребра
 		for (auto& edge : model->getDetails()->getEdges()) {
 			if (edge->selected) {
-				// Выделяем ребра
 				this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
 					edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::cyan).rgba());
 			}
@@ -79,13 +88,12 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 				this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
 					edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())));
 			}
-
 		}
 
 		// Отображаем вершины
 		for (auto& vertex : model->getDetails()->getVertices()) {
 			auto screenPos = vertex->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y()));
-			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 2)) {
+			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 4)) {
 				if (vertex->selected) {
 					// Выделяем вершины
 					this->colorSelectedVertex(qPainter, screenPos);
@@ -197,7 +205,7 @@ void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
 
 	for (int i = 0; i < length; i++) {
 		// TODO: Почему именно 1?
-		this->processPixel(curX, curY, curZ + 1, color);
+		this->processPixel(curX, curY, curZ + 3, color);
 		curX += deltaX;
 		curY += deltaY;
 		curZ += deltaZ;
@@ -208,18 +216,51 @@ void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect
 	double square = (face[0].y() - face[2].y()) * (face[1].x() - face[2].x()) +
 		(face[1].y() - face[2].y()) * (face[2].x() - face[0].x());
 
+	vector<thread> threads(1);
+	auto start = high_resolution_clock::now();
 	for (int y = framingRect.top(); y <= framingRect.bottom(); y++) {
 		for (int x = framingRect.left(); x <= framingRect.right(); x++) {
-			auto barCoords = calculateBarycentric(QPoint(x, y), face, square);
+			unique_ptr<ThreadParams> params = unique_ptr<ThreadParams>(new ThreadParams{
+				x, y, face, square, color, basicFace, model
+			});
 
-			if (barCoords.x() >= -EPS && barCoords.y() >= -EPS && barCoords.z() >= -EPS) {
-				double z = baryCentricInterpolation(face[0], face[1], face[2], barCoords);
-				
-				this->processPixel(x, y, z, color);
-				this->updateFaceBuffer(Vector2d(x, y), z, basicFace);
-				this->updateModelBuffer(Vector2d(x, y), z, model);
+			if (true) {
+				for (auto& thread : threads) {
+					thread = std::thread(&RenderManager::processFramingRectPixel, this, move(params));
+				}
+				for (auto& thread : threads) {
+					thread.join();
+				}
+			}
+			else {
+				processFramingRectPixel(move(params));
 			}
 		}
+	}
+
+
+	auto stop = high_resolution_clock::now();
+	auto duration = duration_cast<nanoseconds>((stop - start));
+	qDebug() << "Грань №" << basicFace->number << ":" << duration.count();
+}
+
+void RenderManager::processFramingRectPixel(unique_ptr<ThreadParams> params) {
+	int x = params->x;
+	int y = params->y;
+	const ScreenFace& face = params->face;
+	double square = params->square;
+	const QRgb & color = params->color;
+	const shared_ptr<Face>& basicFace = params->basicFace;
+	const shared_ptr<Model>& model = params->model;
+
+	auto barCoords = calculateBarycentric(QPoint(x, y), face, square);
+
+	if (barCoords.x() >= -EPS && barCoords.y() >= -EPS && barCoords.z() >= -EPS) {
+		double z = baryCentricInterpolation(face[0], face[1], face[2], barCoords);
+
+		this->processPixel(x, y, z, color);
+		this->updateFaceBuffer(Vector2d(x, y), z, basicFace);
+		this->updateModelBuffer(Vector2d(x, y), z, model);
 	}
 }
 

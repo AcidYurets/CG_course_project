@@ -34,6 +34,7 @@ public slots:
     void on_projectionButton_clicked();
     void on_rerenderButton_clicked();
     void modeChanged(int index);
+    void parallelChanged(int state);
 
 private:
     void setupScene();

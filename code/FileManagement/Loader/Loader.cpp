@@ -69,8 +69,9 @@ Models Loader::loadModels() {
 				faceEdges.push_back(e);
 			}
 
-			shared_ptr<Face> f = make_shared<Face>(Edges(), vertices);
+			shared_ptr<Face> f = make_shared<Face>(faceEdges, vertices);
 			f->setColor(qRgb(200, 200, 200));
+			f->number = details->getFaces().size();
 
 			details->addFace(f);
 		}
@@ -143,6 +144,7 @@ shared_ptr<Scene> Loader::loadScene()
 
 			shared_ptr<Face> f = make_shared<Face>(faceEdges, vertices);
 			f->setColor(qRgb(200, 200, 200));
+			f->number = details->getFaces().size();
 
 			details->addFace(f);
 		}
