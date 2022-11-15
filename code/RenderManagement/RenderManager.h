@@ -9,13 +9,13 @@
 using ScreenFace = std::vector<Vector3d>;
 
 struct ThreadParams {
-	int x;
-	int y;
-	const ScreenFace& face;
+	int startY, stopY;
+	int startX, stopX;
+	const ScreenFace face;
 	double square;
-	const QRgb& color;
-	const shared_ptr<Face>& basicFace;
-	const shared_ptr<Model>& model;
+	const QRgb color;
+	const shared_ptr<Face> basicFace;
+	const shared_ptr<Model> model;
 };
 
 class RenderManager
@@ -80,6 +80,10 @@ private:
 	shared_ptr<QImage> frameBuffer;
 	MatrixX<shared_ptr<Face>> faceBuffer;
 	MatrixX<shared_ptr<Model>> modelBuffer;
+
+	vector<vector<shared_ptr<Face>>> test1 = vector<vector<shared_ptr<Face>>>(10000, vector<shared_ptr<Face>>(10000));
+	vector<vector<double>> test2 = vector<vector<double>>(10000, vector<double>(10000));
+	vector<vector<double>> test3 = vector<vector<double>>(10000, vector<double>(10000));
 
 	bool isPerspective = true;
 };

@@ -1,7 +1,9 @@
 #pragma once
+#include <fstream>
 
 struct Config {
 	bool isParallel = false;
+	//ofstream of;
 };
 
-static Config config;
+extern Config config;

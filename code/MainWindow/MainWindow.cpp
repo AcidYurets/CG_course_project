@@ -2,13 +2,16 @@
 #include "../Exceptions/Exceptions.h"
 #include "../Config.h"
 
+
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent) {
 	ui = new Ui::MainWindowUI();
 	ui->setupUi(this);
 	setupScene();
+	Eigen::initParallel();
+	//config.of.open("test.txt");
 
-	QString fileName = "../data/scenes/cube.sol";
+	QString fileName = "../data/for_tests/plant.sol";
 	this->scene = fileManager.loadScene(fileName.toStdString());
 	renewObjectList();
 
