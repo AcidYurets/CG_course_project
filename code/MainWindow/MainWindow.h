@@ -36,6 +36,8 @@ public slots:
     void modeChanged(int index);
     void parallelChanged(int state);
 
+    void evaluateTime();
+
 private:
     void setupScene();
     void renderScene();

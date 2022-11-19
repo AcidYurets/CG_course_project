@@ -23,8 +23,6 @@ public:
 	void transform(Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);
 
 	bool selected = false;
-	// Номер грани в модели
-	int number = 0;
 
 private:
 	Vector3d findArithmeticCenter();

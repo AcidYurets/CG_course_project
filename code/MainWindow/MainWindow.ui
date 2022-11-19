@@ -469,16 +469,35 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QPushButton" name="rerenderButton">
-             <property name="text">
-              <string>Отрисовать заново</string>
+            <widget class="QFrame" name="frame">
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
              </property>
+             <property name="frameShadow">
+              <enum>QFrame::Sunken</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
+               <widget class="QPushButton" name="rerenderButton">
+                <property name="text">
+                 <string>Отрисовать заново</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="parallelBox">
+                <property name="text">
+                 <string>Распараллелить</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="parallelBox">
+            <widget class="QPushButton" name="evaluationButton">
              <property name="text">
-              <string>Распараллелить</string>
+              <string>Провести замеры</string>
              </property>
             </widget>
            </item>

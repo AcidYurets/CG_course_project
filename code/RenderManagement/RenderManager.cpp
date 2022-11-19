@@ -93,7 +93,7 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 		// Отображаем вершины
 		for (auto& vertex : model->getDetails()->getVertices()) {
 			auto screenPos = vertex->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y()));
-			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 4)) {
+			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 2)) {
 				if (vertex->selected) {
 					// Выделяем вершины
 					this->colorSelectedVertex(qPainter, screenPos);
@@ -205,7 +205,7 @@ void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
 
 	for (int i = 0; i < length; i++) {
 		// TODO: Почему именно 1?
-		this->processPixel(curX, curY, curZ + 3, color);
+		this->processPixel(curX, curY, curZ + 1, color);
 		curX += deltaX;
 		curY += deltaY;
 		curZ += deltaZ;
@@ -216,15 +216,15 @@ void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect
 	double square = (face[0].y() - face[2].y()) * (face[1].x() - face[2].x()) +
 		(face[1].y() - face[2].y()) * (face[2].x() - face[0].x());
 	
+	int threadCount = config.threadCount;
 	auto start = high_resolution_clock::now();
 	if (config.isParallel) {
-		int threadCount = 128;
 		vector<thread> threads(threadCount);
 
 		double startY = framingRect.top();
 		double stepY = (framingRect.bottom() - framingRect.top()) / double(threadCount);
 		
-		auto start1 = high_resolution_clock::now();
+		//auto start1 = high_resolution_clock::now();
 		for (auto& thread : threads) {
 			unique_ptr<ThreadParams> params = unique_ptr<ThreadParams>(new ThreadParams{
 					0, 0, framingRect.left(), framingRect.right(), face, square, color, basicFace, model
@@ -233,43 +233,43 @@ void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect
 			params->startY = round(startY);
 			params->stopY = round(startY + stepY);
 			//params->stopY = framingRect.bottom();
-			thread = std::thread(&RenderManager::processFramingRectPixel, this, move(params));
+			thread = std::thread(&RenderManager::processFramingRect, this, move(params));
 
 			startY += stepY;
 		}
-		auto stop1 = high_resolution_clock::now();
-		auto duration1 = duration_cast<microseconds>((stop1 - start1));
-		qDebug() << "I: Запуск всех потоков для грани" << basicFace->number << ":" << duration1.count();
+		//auto stop1 = high_resolution_clock::now();
+		//auto duration1 = duration_cast<microseconds>((stop1 - start1));
+		//qDebug() << "I: Запуск всех потоков для грани" << basicFace->number << ":" << duration1.count();
 		
-		auto start2 = high_resolution_clock::now();
+		//auto start2 = high_resolution_clock::now();
 		for (auto& thread : threads) {
 			thread.join();
 		}
-		auto stop2 = high_resolution_clock::now();
-		auto duration2 = duration_cast<microseconds>((stop2 - start2));
-		qDebug() << "II: Синхронизация потоков для грани" << basicFace->number << ":" << duration2.count();
+		//auto stop2 = high_resolution_clock::now();
+		//auto duration2 = duration_cast<microseconds>((stop2 - start2));
+		//qDebug() << "II: Ожидание заверщения всех потоков для грани" << basicFace->number << ":" << duration2.count();
 	}
 	else {
+		threadCount = 0;
 		unique_ptr<ThreadParams> params = unique_ptr<ThreadParams>(new ThreadParams {
 				framingRect.top(), framingRect.bottom(), framingRect.left(), framingRect.right(), face, square, color, basicFace, model
 			});
 
-		processFramingRectPixel(move(params));
+		processFramingRect(move(params));
 	}
 	
 	auto stop = high_resolution_clock::now();
-	auto duration = duration_cast<microseconds>((stop - start));
+	auto duration = duration_cast<microseconds>(stop - start);
 
-	ofstream of;
-	of.open("test.txt");
-	of << "Грань №" << basicFace->number << ":" << duration.count();
-	qDebug() << "Грань №" << basicFace->number << ":" << duration.count();
-	of.close();
+	if (config.of.is_open()) {
+		// config.of << threadCount << "\t" << duration.count() << endl;
+		config.tmp.push_back(duration.count());
+	}
+		
+	//qDebug() << "Грань №" << basicFace->number << ":" << duration.count();
 }
 
-void RenderManager::processFramingRectPixel(unique_ptr<ThreadParams> params) {
-	auto start = high_resolution_clock::now();
-
+void RenderManager::processFramingRect(unique_ptr<ThreadParams> params) {
 	int startY = params->startY;
 	int stopY = params->stopY;
 	int startX = params->startX;
@@ -283,28 +283,17 @@ void RenderManager::processFramingRectPixel(unique_ptr<ThreadParams> params) {
 
 	for (int y = startY; y <= stopY; y++) {
 		for (int x = startX; x <= stopX; x++) {
-
 			auto barCoords = calculateBarycentric(QPoint(x, y), face, square);
 
 			if (barCoords.x() >= -EPS && barCoords.y() >= -EPS && barCoords.z() >= -EPS) {
 				double z = baryCentricInterpolation(face[0], face[1], face[2], barCoords);
 
-				// this_thread::sleep_for(chrono::nanoseconds(1));
-				//if (x > 0 && y > 0 && x < test1.size() && y < test1[0].size()) {
-				//	test1[x][y] = basicFace;
-				//	test2[x][y] = 1234.1234;
-				//	test3[x][y] = 4321.4321;
-				//}
 				this->processPixel(x, y, z, color);
 				this->updateFaceBuffer(Vector2d(x, y), z, basicFace);
 				this->updateModelBuffer(Vector2d(x, y), z, model);
 			}
 		}
 	}
-
-	auto stop = high_resolution_clock::now();
-	auto duration = duration_cast<microseconds>((stop - start));
-	qDebug() << "Внутри, от" << startY << "до" << stopY << ":" << duration.count();
 }
 
 bool RenderManager::checkPixel(Vector2d p, double z) {

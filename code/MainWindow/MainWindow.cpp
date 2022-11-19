@@ -9,15 +9,14 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->setupUi(this);
 	setupScene();
 	Eigen::initParallel();
-	//config.of.open("test.txt");
 
-	QString fileName = "../data/for_tests/plant.sol";
+	//QString fileName = "../data/for_tests/plant.sol";
+	QString fileName = "../data/scenes/icosphere.sol";
 	this->scene = fileManager.loadScene(fileName.toStdString());
 	renewObjectList();
 
-	renderScene();
-	transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y(), 0), Vector3d(0, 0, 0));
-
+	transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y()-50, 0), Vector3d(0, 0, 0));
+	
 	//ui->display->resetTransform();
 
 
@@ -30,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	connect(this->ui->modeBox, &QComboBox::currentIndexChanged, this, &MainWindow::modeChanged);
 	connect(this->ui->parallelBox, &QCheckBox::stateChanged, this, &MainWindow::parallelChanged);
+	connect(this->ui->evaluationButton, &QPushButton::clicked, this, &MainWindow::evaluateTime);
 
 	connect(this->ui->display, &Display::mouseClickSignal, this, &MainWindow::mouseClickSlot);
 
@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(this->ui->display, &Display::objectRotateSignal, this, &MainWindow::objectRotateSlot);
 	connect(this->ui->display, &Display::cameraMoveSignal, this, &MainWindow::cameraMoveSlot);
 	connect(this->ui->display, &Display::cameraRotateSignal, this, &MainWindow::cameraRotateSlot);
+
+	renderScene();
 }
 
 MainWindow::~MainWindow() { 
@@ -172,6 +174,15 @@ void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
 			}
 			break;
 
+		case edgeMode: {
+				Edges edges = selectionManager.getSelectedEdges();
+				for (auto& e : edges) {
+					transformManager.transformEdge(e, globalMoveParams, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
+				}
+				renderScene();
+			}
+			break;
+
 		case vertexMode: {
 				Vertices vertices = selectionManager.getSelectedVertices();
 				for (auto& v : vertices) {
@@ -196,6 +207,12 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
 					screenCenter);
 			}
 			break;
+			case edgeMode: {
+				Edges edges = selectionManager.getSelectedEdges();
+				center = edges[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
+					screenCenter);
+			}
+						 break;
 			case faceMode: {
 				Faces faces = selectionManager.getSelectedFaces();
 				center = faces[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
@@ -220,6 +237,14 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
 				}
 			}
 			break;
+			case edgeMode: {
+				Edges edges = selectionManager.getSelectedEdges();
+				for (auto& e : edges) {
+					transformManager.transformEdge(e, Vector3d(0, 0, 0), scaleParams, Vector3d(0, 0, 0));
+				}
+				renderScene();
+			}
+			break;
 			case faceMode: {
 				Faces faces = selectionManager.getSelectedFaces();
 				for (auto& f : faces) {
@@ -241,6 +266,12 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 			case objectMode: {
 				shared_ptr<Model> model = selectionManager.getSelectedModel();
 				center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
+					screenCenter);
+			}
+			break;
+			case edgeMode: {
+				Edges edges = selectionManager.getSelectedEdges();
+				center = edges[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
 					screenCenter);
 			}
 			break;
@@ -277,6 +308,14 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 					transformManager.transformModel(model, Vector3d(0, 0, 0), Vector3d(1, 1, 1), globalRotateParams);
 					renderScene();
 				}
+			}
+			break;
+			case edgeMode: {
+				Edges edges = selectionManager.getSelectedEdges();
+				for (auto& e : edges) {
+					transformManager.transformEdge(e, Vector3d(0, 0, 0), Vector3d(1, 1, 1), globalRotateParams);
+				}
+				renderScene();
 			}
 			break;
 			case faceMode: {
@@ -334,6 +373,50 @@ void MainWindow::parallelChanged(int state) {
 		config.isParallel = true;
 	else if (state == Qt::Unchecked)
 		config.isParallel = false;
+}
+
+void MainWindow::evaluateTime() {
+	try {
+		config.of.open("../../../../AA/my/lab_04/docs/data/time_evaluation.tsv");
+		if (config.of.fail()) {
+			throw FileOpenException(EXCEPCION_ARGS, "Can't open file for evaluation");
+		}
+
+		int cnt = 50; // Кол-во замеров
+
+		// Замеряем время без распараллеливания
+		for (int i = 0; i < cnt; i++) {
+			config.isParallel = false;
+			renderScene();
+		}
+
+		long long avgTime = 0;
+		for (long long time : config.tmp) {
+			avgTime += time;
+		}
+		avgTime /= config.tmp.size();
+		config.of << 0 << "\t" << avgTime << endl;
+		config.tmp.clear();
+
+		// Замеряем время для разного количества потоков
+		for (int k = 1; k <= 128; k *= 2) {
+			for (int i = 0; i < cnt; i++) {
+				config.isParallel = true;
+				config.threadCount = k;
+				renderScene();
+			}
+			long long avgTime = 0;
+			for (long long time : config.tmp) {
+				avgTime += time;
+			}
+			avgTime /= config.tmp.size();
+			config.of << config.threadCount << "\t" << avgTime << endl;
+			config.tmp.clear();
+		}
+
+		config.of.close();
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }
 
 void MainWindow::setupScene() {

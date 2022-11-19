@@ -38,7 +38,6 @@ Vertex Face::getCenter() {
 	Vertex v;
 	v.setPosition(findArithmeticCenter());
 	return v;
-
 }
 
 void Face::setColor(uint color) {
