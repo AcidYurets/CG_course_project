@@ -62,7 +62,7 @@ private:
 	bool checkPixel(double x, double y, double z);
 
 	// Colors
-	QRgb calculateFaceColor(const shared_ptr<Face>& face, const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter);
+	QRgb calculateFaceColor(const shared_ptr<Face>& face, const LightSources& lightSources, const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter);
 
 	// Other calcs
 	QRect calculateFramingRect(const ScreenFace& face);

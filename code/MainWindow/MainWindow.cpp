@@ -10,12 +10,17 @@ MainWindow::MainWindow(QWidget *parent)
 	setupScene();
 	Eigen::initParallel();
 
-	//QString fileName = "../data/for_tests/plant.sol";
-	QString fileName = "../data/scenes/icosphere.sol";
+	QString fileName = "../data/for_tests/plant.sol";
+	//QString fileName = "../data/scenes/thor.sol";
 	this->scene = fileManager.loadScene(fileName.toStdString());
 	renewObjectList();
 
+	// Двигаем камеру с центр сцены
 	transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y()-50, 0), Vector3d(0, 0, 0));
+	// Поворачиваем камеры
+	//transformManager.transformCamera(scene->getCamera(), Vector3d(0, 0, 0), Vector3d(M_PI + M_PI/6, 0, 0));
+	// Увеличиваем тор, чтобы было лучше видно
+	//transformManager.transformModel(scene->getModels()[0], Vector3d(0, 0, 0), Vector3d(2, 2, 2), Vector3d(0, 0, 0));
 	
 	//ui->display->resetTransform();
 
@@ -26,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(this->ui->addSphere, &QPushButton::clicked, this, &MainWindow::addSphere);
 	connect(this->ui->addPiramid, &QPushButton::clicked, this, &MainWindow::addPiramid);
 	connect(this->ui->addThor, &QPushButton::clicked, this, &MainWindow::addThor);
+	connect(this->ui->addLS, &QPushButton::clicked, this, &MainWindow::addLS);
 
 	connect(this->ui->modeBox, &QComboBox::currentIndexChanged, this, &MainWindow::modeChanged);
 	connect(this->ui->parallelBox, &QCheckBox::stateChanged, this, &MainWindow::parallelChanged);
@@ -39,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(this->ui->display, &Display::cameraMoveSignal, this, &MainWindow::cameraMoveSlot);
 	connect(this->ui->display, &Display::cameraRotateSignal, this, &MainWindow::cameraRotateSlot);
 
+	this->showMaximized();
 	renderScene();
 }
 
@@ -119,13 +126,25 @@ void MainWindow::addThor() {
 	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }
 
+void MainWindow::addLS() {
+	try {
+		int lsCount = this->scene->getLightSources().size();
+
+		shared_ptr<LightSource> ls = make_shared<LightSource>(Vertex(0, 0, 0), "Источник света " + to_string(lsCount + 1));
+		this->scene->getLightSources().push_back(ls);
+		renewObjectList();
+
+		renderScene();
+	}
+	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
 void MainWindow::mouseClickSlot(Vector2i pos) {
 	try {
 		showStatusMessage("Mouse clicked to " + to_string(pos.x()) + ", " + to_string(pos.y()));
 
 		// Сбрасываем выбранные элементы
 		selectionManager.clearSelecteds(scene);
-
 		switch (renderManager.mode) {
 		case objectMode:
 			selectionManager.selectModel(scene, pos);
@@ -139,8 +158,11 @@ void MainWindow::mouseClickSlot(Vector2i pos) {
 		case vertexMode:
 			selectionManager.selectVertex(scene, pos);
 			break;
+		case lightSourceMode:
+			selectionManager.selectLightSources(scene, pos);
+			break;
 		}
-
+			
 		renderScene();
 	}
 	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
@@ -191,6 +213,14 @@ void MainWindow::objectMoveSlot(Vector2i lastPos, Vector2i newPos) {
 				renderScene();
 			}
 			break;
+		case lightSourceMode: {
+				LightSources lightSources = selectionManager.getSelectedLightSources();
+				for (auto& ls : lightSources) {
+					transformManager.transformLightSource(ls, globalMoveParams, Vector3d(1, 1, 1), Vector3d(0, 0, 0));
+				}
+				renderScene();
+			}
+			break;
 		}
 	}
 	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
@@ -203,18 +233,21 @@ void MainWindow::objectScaleSlot(Vector2i lastPos, Vector2i newPos) {
 		switch (renderManager.mode) {
 			case objectMode: {
 				shared_ptr<Model> model = selectionManager.getSelectedModel();
+				if (model == nullptr) return;
 				center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
 					screenCenter);
 			}
 			break;
 			case edgeMode: {
 				Edges edges = selectionManager.getSelectedEdges();
+				if (edges.size() == 0) return;
 				center = edges[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
 					screenCenter);
 			}
 						 break;
 			case faceMode: {
 				Faces faces = selectionManager.getSelectedFaces();
+				if (faces.size() == 0) return;
 				center = faces[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
 					screenCenter);
 			}
@@ -265,18 +298,21 @@ void MainWindow::objectRotateSlot(Vector2i lastPos, Vector2i newPos) {
 		switch (renderManager.mode) {
 			case objectMode: {
 				shared_ptr<Model> model = selectionManager.getSelectedModel();
+				if (model == nullptr) return;
 				center = model->getDetails()->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
 					screenCenter);
 			}
 			break;
 			case edgeMode: {
 				Edges edges = selectionManager.getSelectedEdges();
+				if (edges.size() == 0) return;
 				center = edges[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
 					screenCenter);
 			}
 			break;
 			case faceMode: {
 				Faces faces = selectionManager.getSelectedFaces();
+				if (faces.size() == 0) return;
 				center = faces[0]->getCenter().getScreenPosition(scene->getCamera(), renderManager.getPerspective(),
 					screenCenter);
 			}
@@ -360,6 +396,12 @@ void MainWindow::on_projectionButton_clicked() {
 	renderScene();
 }
 
+void MainWindow::on_frameButton_clicked() {
+	config.isWireframe = !config.isWireframe;
+
+	renderScene();
+}
+
 void MainWindow::on_rerenderButton_clicked() {
 	renderScene();
 }
@@ -377,7 +419,7 @@ void MainWindow::parallelChanged(int state) {
 
 void MainWindow::evaluateTime() {
 	try {
-		config.of.open("../../../../AA/my/lab_04/docs/data/time_evaluation.tsv");
+		config.of.open("../evaluation/time_evaluation.tsv");
 		if (config.of.fail()) {
 			throw FileOpenException(EXCEPCION_ARGS, "Can't open file for evaluation");
 		}
@@ -428,6 +470,25 @@ void MainWindow::setupScene() {
 	ui->display->setGeometry(9, 57, 758, 549);
 	ui->display->setFocusPolicy(Qt::StrongFocus);
 
+	// Заполняю текст информационного виджета
+	ui->infoLabel->setText("### Информация о работе программы\n\
+Клавиши для выбора режима преобразований:\n\
+* *G* - режим переноса\n\
+* *R* - режим поворота\n\
+* *S* - режим масштабирования\n\
+\n\
+Выбор медели, ее составляющей части или  \n\
+источника освещения осуществляется \n\
+при помощи *левой кнопки мыши*.\n\
+\n\
+Преобразований будет применено к выбранному \n\
+объекту сцены\n\
+\n\
+Управление камерой:\n\
+* *Правая кнопка мыши* - перенос камеры \n\
+* *Средняя кнопка мыши* - поворот камеры \n\
+");
+
 	this->screenCenter = Vector2d(ui->display->geometry().center().x(), ui->display->geometry().center().y());
 }
 
@@ -452,6 +513,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
 void MainWindow::renewObjectList() {
 	try {
 		if (!scene) throw EmptyException(EXCEPCION_ARGS, "Scene is null");
+
 		auto modelsTree = ui->objectsWidget->findItems(tr("Модели"), Qt::MatchExactly)[0];
 
 		auto &models = scene->getModels();
@@ -462,6 +524,17 @@ void MainWindow::renewObjectList() {
 		}
 		modelsTree->addChildren(modelsChildern);
 		ui->objectsWidget->addTopLevelItem(modelsTree);
+
+		auto lsTree = ui->objectsWidget->findItems(tr("Источники света"), Qt::MatchExactly)[0];
+
+		auto& ls = scene->getLightSources();
+		auto lsChildern = lsTree->takeChildren();
+		lsChildern.clear();
+		for (size_t i = 0; i < ls.size(); i++) {
+			lsChildern.append(new QTreeWidgetItem(lsTree, QStringList(QString(ls[i]->getName().c_str()))));
+		}
+		lsTree->addChildren(lsChildern);
+		ui->objectsWidget->addTopLevelItem(lsTree);
 	}
 	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
 }

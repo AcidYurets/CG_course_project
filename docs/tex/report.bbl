@@ -1,0 +1,57 @@
+\begin{thebibliography}{1}
+\def\selectlanguageifdefined#1{
+\expandafter\ifx\csname date#1\endcsname\relax
+\else\language\csname l@#1\endcsname\fi}
+\ifx\undefined\url\def\url#1{{\small #1}}\else\fi
+\ifx\undefined\BibUrl\def\BibUrl#1{\url{#1}}\else\fi
+\ifx\undefined\BibAnnote\long\def\BibAnnote#1{(#1)}\else\fi
+\ifx\undefined\BibEmph\def\BibEmph#1{\emph{#1}}\else\fi
+
+\bibitem{rogers_alg}
+\selectlanguageifdefined{russian}
+Ф.~Роджерс~Д. Алгоритмические основы
+  машинной графики.
+\newblock -- М.: Издательство <<Мир>>, 1989.
+
+\bibitem{rogers_math}
+\selectlanguageifdefined{russian}
+Ф.~Роджерс~Д. Математические основы
+  машинной графики.
+\newblock -- М.: Издательство <<Мир>>, 2001.
+
+\bibitem{cpp-lang}
+\selectlanguageifdefined{russian}
+Программирование на C/C++ [Электронный
+  ресурс].
+\newblock Режим доступа: \url{http://www.c-cpp.ru/} (дата
+  обращения: 11.10.2022).
+
+\bibitem{qt}
+\selectlanguageifdefined{russian}
+Qt framework [Электронный ресурс].
+\newblock Режим доступа: \url{https://www.qt.io/product/framework}
+  (дата обращения: 11.10.2022).
+
+\bibitem{vs}
+\selectlanguageifdefined{russian}
+Visual Studio -- Разработка приложений на C и C++
+  [Электронный ресурс].
+\newblock Режим доступа:
+  \url{https://visualstudio.microsoft.com/ru/vs/features/cplusplus/} (дата
+  обращения: 11.10.2022).
+
+\bibitem{intelli}
+\selectlanguageifdefined{russian}
+IntelliSense [Электронный ресурс].
+\newblock Режим доступа:
+  \url{https://learn.microsoft.com/ru-ru/visualstudio/ide/visual-cpp-intellisense?view=vs-2022}
+  (дата обращения: 11.10.2022).
+
+\bibitem{chrono}
+\selectlanguageifdefined{russian}
+Date and time utilities [Электронный ресурс].
+\newblock Режим доступа:
+  \url{https://en.cppreference.com/w/cpp/chrono} (дата обращения:
+  11.10.2022).
+
+\end{thebibliography}

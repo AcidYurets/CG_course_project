@@ -11,6 +11,8 @@ public:
 	void transformEdge(shared_ptr<Edge>,
 		Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);
 	void transformVertex(shared_ptr<Vertex>, 
+		Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);	
+	void transformLightSource(shared_ptr<LightSource>, 
 		Vector3d move_params, Vector3d scale_params, Vector3d rotate_params);
 
 	void transformCamera(shared_ptr<Camera> camera,

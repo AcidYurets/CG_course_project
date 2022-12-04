@@ -5,5 +5,6 @@ enum modes
 	objectMode,
 	faceMode,
 	edgeMode,
-	vertexMode
+	vertexMode,
+	lightSourceMode
 };

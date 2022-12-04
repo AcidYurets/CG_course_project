@@ -42,21 +42,20 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 	if (!scene) {
 		return;
 	}
-	//qDebug() << "Рендерим сцену";
 
-	this->initBuffers(geometry);
+	this->initBuffers(geometry, qRgb(100, 100, 100));
 	QPainter qPainter = QPainter(frameBuffer.get());
 
 	// Сначала рисуем оси координат
-	auto xLine = Line(Vertex(-10, 0, 0), Vertex(10, 0, 0));
-	this->processLine(xLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
-		xLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::red).rgba());
-	auto yLine = Line(Vertex(0, -10, 0), Vertex(0, 10, 0));
-	this->processLine(yLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
-		yLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::green).rgba());
-	auto zLine = Line(Vertex(0, 0, -10), Vertex(0, 0, 10));
-	this->processLine(zLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
-		zLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::blue).rgba());
+	//auto xLine = Line(Vertex(-10, 0, 0), Vertex(10, 0, 0));
+	//this->processLine(xLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+	//	xLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::red).rgba());
+	//auto yLine = Line(Vertex(0, -10, 0), Vertex(0, 10, 0));
+	//this->processLine(yLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+	//	yLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::green).rgba());
+	//auto zLine = Line(Vertex(0, 0, -10), Vertex(0, 0, 10));
+	//this->processLine(zLine.p1.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+	//	zLine.p2.getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::blue).rgba());
 
 	for (auto& model : scene->getModels()) {
 		// Отображаем грани
@@ -64,12 +63,6 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 			if (face->selected) {
 				auto prevColor = face->getColor();
 				face->setColor(QColor(Qt::cyan).rgba());
-				renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()), model);
-				face->setColor(prevColor);
-			}
-			else if (model->selected) {
-				auto prevColor = face->getColor();
-				face->setColor(QColor(Qt::yellow).rgba());
 				renderFace(face, scene, Vector2d(geometry.center().x(), geometry.center().y()), model);
 				face->setColor(prevColor);
 			}
@@ -84,6 +77,10 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 				this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
 					edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(Qt::cyan).rgba());
 			}
+			else if (model->selected) {
+				this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
+					edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())), QColor(qRgb(255, 150, 0)).rgba());
+			}
 			else {
 				this->processLine(edge->getVertices()[0]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())),
 					edge->getVertices()[1]->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y())));
@@ -93,7 +90,7 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 		// Отображаем вершины
 		for (auto& vertex : model->getDetails()->getVertices()) {
 			auto screenPos = vertex->getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y()));
-			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 2)) {
+			if (checkPixel(screenPos.x(), screenPos.y(), screenPos.z() + 3)) {
 				if (vertex->selected) {
 					// Выделяем вершины
 					this->colorSelectedVertex(qPainter, screenPos);
@@ -108,6 +105,28 @@ void RenderManager::renderScene(const shared_ptr<Scene>& scene, const QRectF& ge
 					qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), r, r);
 				}
 			}
+		}
+	}
+
+	// Отображаем источники света
+	for (auto& ls : scene->getLightSources()) {
+		auto screenPos = ls->getPosition().getScreenPosition(scene->getCamera(), isPerspective, Vector2d(geometry.center().x(), geometry.center().y()));
+		if (checkPixel(screenPos)) {
+			auto pen = QPen(qRgb(254, 254, 34));
+			auto brush = QBrush(Qt::NoBrush);
+			int r = 10;
+
+			if (ls->selected) {
+				pen = QPen(qRgb(255, 150, 0));
+				brush = QBrush(Qt::NoBrush);
+			}
+
+			qPainter.setBrush(brush);
+			qPainter.setPen(pen);
+
+			qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), r, r);
+			qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), r - 4, r - 4);
+			qPainter.drawEllipse(QPointF(screenPos.x(), screenPos.y()), r - 8, r - 8);
 		}
 	}
 }
@@ -146,7 +165,7 @@ void RenderManager::renderFace(const shared_ptr<Face>& face, const shared_ptr<Sc
 	auto framingRect = this->calculateFramingRect(screenFace);
 	
 	// Вычисляем цвет грани (он один, т.к. используется простой алгоритм закраски)
-	auto faceColor = this->calculateFaceColor(face, scene->getCamera(), isPerspective, screenCenter);
+	auto faceColor = this->calculateFaceColor(face, scene->getLightSources(), scene->getCamera(), isPerspective, screenCenter);
 
 	// Обрабатываем все приксели обр. прямоугольника
 	this->processFace(screenFace, framingRect, faceColor, face, model);
@@ -205,7 +224,7 @@ void RenderManager::processLine(Vector3d p1, Vector3d p2, QRgb color) {
 
 	for (int i = 0; i < length; i++) {
 		// TODO: Почему именно 1?
-		this->processPixel(curX, curY, curZ + 1, color);
+		this->processPixel(curX, curY, curZ + 2, color);
 		curX += deltaX;
 		curY += deltaY;
 		curZ += deltaZ;
@@ -224,7 +243,6 @@ void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect
 		double startY = framingRect.top();
 		double stepY = (framingRect.bottom() - framingRect.top()) / double(threadCount);
 		
-		//auto start1 = high_resolution_clock::now();
 		for (auto& thread : threads) {
 			unique_ptr<ThreadParams> params = unique_ptr<ThreadParams>(new ThreadParams{
 					0, 0, framingRect.left(), framingRect.right(), face, square, color, basicFace, model
@@ -237,17 +255,10 @@ void RenderManager::processFace(const ScreenFace& face, const QRect& framingRect
 
 			startY += stepY;
 		}
-		//auto stop1 = high_resolution_clock::now();
-		//auto duration1 = duration_cast<microseconds>((stop1 - start1));
-		//qDebug() << "I: Запуск всех потоков для грани" << basicFace->number << ":" << duration1.count();
 		
-		//auto start2 = high_resolution_clock::now();
 		for (auto& thread : threads) {
 			thread.join();
 		}
-		//auto stop2 = high_resolution_clock::now();
-		//auto duration2 = duration_cast<microseconds>((stop2 - start2));
-		//qDebug() << "II: Ожидание заверщения всех потоков для грани" << basicFace->number << ":" << duration2.count();
 	}
 	else {
 		threadCount = 0;
@@ -288,7 +299,9 @@ void RenderManager::processFramingRect(unique_ptr<ThreadParams> params) {
 			if (barCoords.x() >= -EPS && barCoords.y() >= -EPS && barCoords.z() >= -EPS) {
 				double z = baryCentricInterpolation(face[0], face[1], face[2], barCoords);
 
-				this->processPixel(x, y, z, color);
+				if (!config.isWireframe) {
+					this->processPixel(x, y, z, color);
+				}
 				this->updateFaceBuffer(Vector2d(x, y), z, basicFace);
 				this->updateModelBuffer(Vector2d(x, y), z, model);
 			}
@@ -320,12 +333,29 @@ bool RenderManager::checkPixel(double x, double y, double z) {
 	return this->checkPixel(Vector2d(x, y), z);
 }
 
-QRgb RenderManager::calculateFaceColor(const shared_ptr<Face>& face, const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter) {
-	// TODO: Используя простой алгоритм закраски посчитать цвет грани
+QRgb RenderManager::calculateFaceColor(const shared_ptr<Face>& face, const LightSources& lightSources, const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter) {
 	auto n = face->getNormal(camera, isPerspective, screenCenter);
-	double k = 130;
+	double k = 200, f = 100;
 	QColor baseColor(face->getColor());
-	return baseColor.lighter(k * n.dot(Vector3d(0, 0, 1))).rgb();
+
+	f = n.dot(Vector3d(0, 0, 1)) * k;
+	if (f > 100) {
+		baseColor = baseColor.lighter(f);
+	}
+
+	Vector3d globalNormal = face->getGlobalNormal();
+	for (auto& ls : lightSources) {
+		auto lsPos = ls->getPosition().getTransformPosition();
+		Vector3d lsVector = lsPos - face->getCenter().getTransformPosition();
+		lsVector.normalize();
+		f = globalNormal.dot(lsVector) * ls->k;
+		if (f > 100) {
+			baseColor = baseColor.lighter(f);
+		}
+		
+	}
+
+	return baseColor.rgb();
 }
 
 QRect RenderManager::calculateFramingRect(const ScreenFace& face) {

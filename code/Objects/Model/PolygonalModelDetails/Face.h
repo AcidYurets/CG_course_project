@@ -16,6 +16,7 @@ public:
 
 	uint getColor();
 	Vector3d getNormal(const shared_ptr<Camera>& camera, bool isPerspective, Vector2d screenCenter);
+	Vector3d getGlobalNormal();
 	Vertex getCenter();
 
 	void setColor(uint color);

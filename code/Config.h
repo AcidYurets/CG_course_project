@@ -3,6 +3,7 @@
 #include <vector>
 
 struct Config {
+	bool isWireframe = false;
 	bool isParallel = false;
 	unsigned int threadCount = 8; // used if is parallel
 

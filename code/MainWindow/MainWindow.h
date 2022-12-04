@@ -22,6 +22,7 @@ public slots:
     void addSphere();
     void addPiramid();
     void addThor();
+    void addLS();
 
     void mouseClickSlot(Vector2i pos);
 
@@ -32,6 +33,7 @@ public slots:
     void cameraRotateSlot(Vector2i lastPos, Vector2i newPos);
 
     void on_projectionButton_clicked();
+    void on_frameButton_clicked();
     void on_rerenderButton_clicked();
     void modeChanged(int index);
     void parallelChanged(int state);

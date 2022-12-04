@@ -18,6 +18,7 @@ public:
 	void selectFace(shared_ptr<Scene>& scene, Vector2i mousePos);
 	void selectEdge(shared_ptr<Scene>& scene, Vector2i mousePos);
 	void selectVertex(shared_ptr<Scene>& scene, Vector2i mousePos);
+	bool selectLightSources(shared_ptr<Scene>& scene, Vector2i mousePos);
 
 	void clearSelecteds(shared_ptr<Scene>& scene);
 
@@ -25,6 +26,7 @@ public:
 	Faces getSelectedFaces();
 	Edges getSelectedEdges();
 	Vertices getSelectedVertices();
+	LightSources getSelectedLightSources();
 
 private:
 	MatrixX<shared_ptr<Face>> faceBuffer;
@@ -35,5 +37,7 @@ private:
 	Faces selectedFaces = Faces(0);
 	Edges selectedEdges = Edges(0);
 	Vertices selectedVertices = Vertices(0);
+
+	LightSources selectedLightSources = LightSources(0);
 };
 

@@ -29,6 +29,22 @@ Vector3d Face::getNormal(const shared_ptr<Camera>& camera, bool isPerspective, V
 
 	auto u = vertices[1]->getScreenPosition(camera, isPerspective, screenCenter) - vertices[0]->getScreenPosition(camera, isPerspective, screenCenter);
 	auto v = vertices[2]->getScreenPosition(camera, isPerspective, screenCenter) - vertices[0]->getScreenPosition(camera, isPerspective, screenCenter);
+
+	auto normal = u.cross(v);
+	normal.normalize();
+	return normal;
+}
+
+Vector3d Face::getGlobalNormal() {
+	if (vertices.size() < 3) throw EmptyException(EXCEPCION_ARGS, "CRITICAL: Face has less then 3 vertices!");
+
+	Vector3d v0 = vertices[0]->getTransformPosition();
+	Vector3d v1 = vertices[1]->getTransformPosition();
+	Vector3d v2 = vertices[2]->getTransformPosition();
+
+	auto u = v1 - v0;
+	auto v = v2 - v0;
+
 	auto normal = u.cross(v);
 	normal.normalize();
 	return normal;

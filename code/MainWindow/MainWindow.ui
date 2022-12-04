@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1008</width>
-    <height>658</height>
+    <width>832</width>
+    <height>637</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,12 +51,6 @@
            <height>114</height>
           </size>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>16777215</height>
-          </size>
-         </property>
          <column>
           <property name="text">
            <string>Объекты</string>
@@ -65,16 +59,6 @@
          <item>
           <property name="text">
            <string>Модели</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Икосфера</string>
-           </property>
-          </item>
-         </item>
-         <item>
-          <property name="text">
-           <string>Камеры</string>
           </property>
          </item>
          <item>
@@ -93,315 +77,25 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
-         <widget class="QWidget" name="transformationPage">
+         <widget class="QWidget" name="tab">
           <attribute name="title">
-           <string>Трансформация</string>
+           <string>Информация</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="infoLabel">
              <property name="text">
-              <string>Перенос</string>
+              <string>### Элементы управления</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::MarkdownText</enum>
              </property>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_1">
-             <item>
-              <widget class="QLabel" name="label_4">
-               <property name="text">
-                <string>X:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="moveXBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="moveXButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QLabel" name="label_5">
-               <property name="text">
-                <string>Y:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="moveYBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="moveYButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QLabel" name="label_6">
-               <property name="text">
-                <string>Z:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="moveZBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="moveZButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Вращение, в градусах</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <widget class="QLabel" name="label_8">
-               <property name="text">
-                <string>X:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="rotateXBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="rotateXButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <widget class="QLabel" name="label_9">
-               <property name="text">
-                <string>Y:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="rotateYBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="rotateYButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <item>
-              <widget class="QLabel" name="label_10">
-               <property name="text">
-                <string>Z:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="rotateZBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="rotateZButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Масштабирование</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
-             <item>
-              <widget class="QLabel" name="label_11">
-               <property name="text">
-                <string>X:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="scaleXBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="scaleXButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <item>
-              <widget class="QLabel" name="label_13">
-               <property name="text">
-                <string>Y:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="scaleYBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="scaleYButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <item>
-              <widget class="QLabel" name="label_14">
-               <property name="text">
-                <string>Z:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="scaleZBox">
-               <property name="minimum">
-                <double>-1000.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>1000.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.100000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="scaleZButton">
-               <property name="text">
-                <string>Применить</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <spacer name="transformationSpacer">
+            <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -419,33 +113,58 @@
           <attribute name="title">
            <string>Добавление</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QPushButton" name="addCube">
-             <property name="text">
-              <string>Добавить куб</string>
+            <widget class="QGroupBox" name="groupBox">
+             <property name="title">
+              <string>Модели</string>
              </property>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QPushButton" name="addCube">
+                <property name="text">
+                 <string>Добавить куб</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="addSphere">
+                <property name="text">
+                 <string>Добавить икосферу</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="addPiramid">
+                <property name="text">
+                 <string>Добавить пирамиду</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="addThor">
+                <property name="text">
+                 <string>Добавить тор</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="addSphere">
-             <property name="text">
-              <string>Добавить икосферу</string>
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="title">
+              <string>Источники света</string>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="addPiramid">
-             <property name="text">
-              <string>Добавить пирамиду</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="addThor">
-             <property name="text">
-              <string>Добавить тор</string>
-             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <item>
+               <widget class="QPushButton" name="addLS">
+                <property name="text">
+                 <string>Добавить источник света</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -546,6 +265,11 @@
            <string>Режим редактирования вершин</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Режим источников освешения</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item>
@@ -585,7 +309,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1008</width>
+     <width>832</width>
      <height>22</height>
     </rect>
    </property>
@@ -596,8 +320,6 @@
     <addaction name="open"/>
     <addaction name="loadModels"/>
     <addaction name="separator"/>
-    <addaction name="save"/>
-    <addaction name="saveModels"/>
    </widget>
    <widget class="QMenu" name="infoMenu">
     <property name="title">

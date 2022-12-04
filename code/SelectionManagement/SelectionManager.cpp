@@ -13,6 +13,25 @@ void SelectionManager::setModelBuffer(MatrixX<shared_ptr<Model>> modelBuffer) {
 	this->modelBuffer = modelBuffer;
 }
 
+bool SelectionManager::selectLightSources(shared_ptr<Scene>& scene, Vector2i mousePos) {
+	if (!scene) throw EmptyException(EXCEPCION_ARGS, "Scene was't created");
+	if (scene->getModels().empty()) throw EmptyException(EXCEPCION_ARGS, "Models is empty");
+
+	auto &lightSources = scene->getLightSources();
+	if (lightSources.size() == 0) return false;
+
+	for (auto &ls : lightSources) {
+		auto pos = ls->getPosition().getScreenPosition(scene->getCamera(), isPerspective, screenCenter);
+		auto dist = getDistance2D(Vector2d(mousePos.x(), mousePos.y()), Vector2d(pos.x(), pos.y()));
+		if (dist < 10) {
+			selectedLightSources.push_back(ls);
+			ls->selected = true;
+			return true;
+		}
+	}
+
+	return false;
+}
 
 void SelectionManager::selectModel(shared_ptr<Scene> &scene, Vector2i mousePos) {
 	if (!scene) throw EmptyException(EXCEPCION_ARGS, "Scene was't created");
@@ -107,6 +126,7 @@ void SelectionManager::clearSelecteds(shared_ptr<Scene>& scene) {
 	selectedVertices.clear();
 	selectedEdges.clear();
 	selectedFaces.clear();
+	selectedLightSources.clear();
 
 	for (auto& m : scene->getModels()) {
 		m->selected = false;
@@ -120,6 +140,9 @@ void SelectionManager::clearSelecteds(shared_ptr<Scene>& scene) {
 		for (auto& v : d->getVertices()) {
 			v->selected = false;
 		}
+	}
+	for (auto& ls : scene->getLightSources()) {
+		ls->selected = false;
 	}
 }
 
@@ -137,4 +160,8 @@ Edges SelectionManager::getSelectedEdges() {
 
 Vertices SelectionManager::getSelectedVertices() {
 	return selectedVertices;
+}
+
+LightSources SelectionManager::getSelectedLightSources() {
+	return selectedLightSources;
 }

@@ -70,7 +70,7 @@ Models Loader::loadModels() {
 			}
 
 			shared_ptr<Face> f = make_shared<Face>(faceEdges, vertices);
-			f->setColor(qRgb(200, 200, 200));
+			f->setColor(qRgb(50, 50, 50));
 
 			details->addFace(f);
 		}
@@ -142,7 +142,7 @@ shared_ptr<Scene> Loader::loadScene()
 			}
 
 			shared_ptr<Face> f = make_shared<Face>(faceEdges, vertices);
-			f->setColor(qRgb(200, 200, 200));
+			f->setColor(qRgb(50, 50, 50));
 
 			details->addFace(f);
 		}
@@ -164,6 +164,11 @@ shared_ptr<Scene> Loader::loadScene()
 		details->setArithmeticCenter();
 		shared_ptr<Model> m = make_shared<Model>(details, modelName);
 		models.push_back(m);
+	}
+
+	// Сохраним последний считанный источник освещения
+	if (ls) {
+		lightSources.push_back(ls);
 	}
 	
 	shared_ptr<Scene> scene = make_shared<Scene>();
