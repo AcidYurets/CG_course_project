@@ -10,22 +10,23 @@ MainWindow::MainWindow(QWidget *parent)
 	setupScene();
 	Eigen::initParallel();
 
-	QString fileName = "../data/for_tests/plant.sol";
-	//QString fileName = "../data/scenes/thor.sol";
+	//QString fileName = "../data/for_tests/plant.sol";
+	QString fileName = "../data/scenes/thor.sol";
 	this->scene = fileManager.loadScene(fileName.toStdString());
 	renewObjectList();
 
 	// Двигаем камеру с центр сцены
 	transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y()-50, 0), Vector3d(0, 0, 0));
 	// Поворачиваем камеры
-	//transformManager.transformCamera(scene->getCamera(), Vector3d(0, 0, 0), Vector3d(M_PI + M_PI/6, 0, 0));
+	transformManager.transformCamera(scene->getCamera(), Vector3d(0, 0, 0), Vector3d(M_PI + M_PI/6, 0, 0));
 	// Увеличиваем тор, чтобы было лучше видно
-	//transformManager.transformModel(scene->getModels()[0], Vector3d(0, 0, 0), Vector3d(2, 2, 2), Vector3d(0, 0, 0));
+	transformManager.transformModel(scene->getModels()[0], Vector3d(0, 0, 0), Vector3d(2, 2, 2), Vector3d(0, 0, 0));
 	
 	//ui->display->resetTransform();
 
 
 	connect(this->ui->open, &QAction::triggered, this, &MainWindow::openFileSlot);
+	connect(this->ui->showInfo, &QAction::triggered, this, &MainWindow::showInfo);
 	connect(this->ui->loadModels, &QAction::triggered, this, &MainWindow::loadSlot);
 	connect(this->ui->addCube, &QPushButton::clicked, this, &MainWindow::addCube);
 	connect(this->ui->addSphere, &QPushButton::clicked, this, &MainWindow::addSphere);
@@ -61,7 +62,10 @@ void MainWindow::openFileSlot() {
 		this->scene = fileManager.loadScene(fileName.toStdString());
 		renewObjectList();
 
-		transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y(), 0), Vector3d(0, 0, 0));
+		// Двигаем камеру с центр сцены
+		transformManager.transformCamera(scene->getCamera(), Vector3d(screenCenter.x(), screenCenter.y() - 50, 0), Vector3d(0, 0, 0));
+		// Поворачиваем камеры
+		transformManager.transformCamera(scene->getCamera(), Vector3d(0, 0, 0), Vector3d(M_PI + M_PI / 6, 0, 0));
 
 		renderScene();
 	}
@@ -137,6 +141,11 @@ void MainWindow::addLS() {
 		renderScene();
 	}
 	catch (BaseException ex) { QMessageBox::critical(this, "Error", ex.what()); }
+}
+
+void MainWindow::showInfo() {
+	QMessageBox::information(this, "Информация о программе", "Данный редактор трехмерных моделей разработан Солоповым Юрием Витальевичем, \
+студентом кафадры ИУ7 МГТУ им. Н. Э. Баумана.");
 }
 
 void MainWindow::mouseClickSlot(Vector2i pos) {

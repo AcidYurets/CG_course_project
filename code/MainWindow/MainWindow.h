@@ -24,6 +24,8 @@ public slots:
     void addThor();
     void addLS();
 
+    void showInfo();
+
     void mouseClickSlot(Vector2i pos);
 
     void objectMoveSlot(Vector2i lastPos, Vector2i newPos);
